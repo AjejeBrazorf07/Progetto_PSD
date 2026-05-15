@@ -29,7 +29,7 @@ data nuovaData(int giorno_settimana, int giorno, int mese, int anno) {
     return d;
 }
 
-// Visualizza la data formattata nel formato giorno_settimana gg/mm/aa.
+// Visualizza la data formattata nel formato giorno_settimana gg/mm/aaaa.
 void visualizzaData(data d) {
     if (d == NULL) return;
 
@@ -75,4 +75,18 @@ void visualizzaOrario(orario o) {
     if (o == NULL) return;
     
     printf("%02d:%02d\n", o->ora, o->minuti);
+}
+
+// Dealloca la struttura data
+void distruggiData(data d) {
+    if (d != NULL) {
+        free(d);
+    }
+}
+
+// Dealloca la struttura orario
+void distruggiOrario(orario o) {
+    if (o != NULL) {
+        free(o);
+    }
 }

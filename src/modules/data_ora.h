@@ -25,3 +25,9 @@ orario nuovoOrario(int ora, int minuti);
 // Stampa a video l'orario nel formato hh:mm.
 // Parametri: o (puntatore all'orario da visualizzare)
 void visualizzaOrario(orario o);
+
+// Dealloca la struttura Data presa come parametro
+void distruggiData(data d);
+
+// Dealloca la struttura orario presa come parametro
+void distruggiOrario(orario o);
