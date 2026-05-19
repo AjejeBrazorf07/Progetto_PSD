@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "data_ora.h"
 
+
 struct Data {
     int giorno_settimana;
     int giorno;
@@ -13,6 +14,7 @@ struct Orario {
     int ora;
     int minuti;
 };
+
 
 // Crea e inizializza una nuova data.
 data nuovaData(int giorno_settimana, int giorno, int mese, int anno) {
@@ -28,6 +30,7 @@ data nuovaData(int giorno_settimana, int giorno, int mese, int anno) {
 
     return d;
 }
+
 
 // Visualizza la data formattata nel formato giorno_settimana gg/mm/aaaa.
 void visualizzaData(data d) {
@@ -57,6 +60,22 @@ void visualizzaData(data d) {
     printf("%d/%d/%d\n", d->giorno, d->mese, d->anno);
 }
 
+
+// Confronta due date e stabilisce se sono uguali.
+int comparaData(data d1, data d2) {
+    if (d1 == NULL || d2 == NULL) {
+        return 0;
+    }
+
+    if (d1->giorno_settimana != d2->giorno_settimana) return 0;
+    if (d1->giorno != d2->giorno) return 0;
+    if (d1->mese != d2->mese) return 0;
+    if (d1->anno != d2->anno) return 0;
+
+    return 1;
+}
+
+
 // Crea e inizializza un nuovo orario.
 orario nuovoOrario(int ora, int minuti) {
     orario o = malloc(sizeof(struct Orario));
@@ -70,6 +89,7 @@ orario nuovoOrario(int ora, int minuti) {
     return o;
 }
 
+
 // Formatta l'output per l'orario nel formato hh:mm
 void visualizzaOrario(orario o) {
     if (o == NULL) return;
@@ -77,12 +97,27 @@ void visualizzaOrario(orario o) {
     printf("%02d:%02d\n", o->ora, o->minuti);
 }
 
+
+// Confronta due orari e stabilisce se sono uguali.
+int comparaOrario(orario o1, orario o2) {
+    if (o1 == NULL || o2 == NULL) {
+        return 0;
+    }
+
+    if (o1->ora != o2->ora) return 0;
+    if (o1->minuti != o2->minuti) return 0;
+
+    return 1;
+}
+
+
 // Dealloca la struttura data
 void distruggiData(data d) {
     if (d != NULL) {
         free(d);
     }
 }
+
 
 // Dealloca la struttura orario
 void distruggiOrario(orario o) {

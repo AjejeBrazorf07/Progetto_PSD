@@ -10,3 +10,12 @@ void rimuoviPrenotazione(prenotazione p);
 // stampa i campi di Prenotazione presa come parametro
 void visualizzaPrenotazione(prenotazione p);
 
+char* ottieniMatricola(prenotazione p);
+
+data ottieniData(prenotazione p);
+
+orario ottieniOrarioIngresso(prenotazione p);
+
+orario ottieniOrarioUscita(prenotazione p);
+
+int ottieniPostoAssegnato(prenotazione p);

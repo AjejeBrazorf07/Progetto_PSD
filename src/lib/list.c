@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "list_item.h"
 #include "list.h"
+#include "modules/prenotazione.h"
 
 struct node {
     item value;
@@ -77,7 +78,7 @@ int posItem(list l, item val, int data_type) {
     while (l != NULL) {
         // Decide se gestire prenotazioni (0) o giorni della settimana (1).
         if (data_type==0) {
-
+            // comparaPrenotazioni
         } else if (data_type==1) {
 
         }
@@ -128,8 +129,7 @@ void outputList(list l, int data_type) {
     while (l != NULL) {
         // Decide se gestire prenotazioni (0) o giorni della settimana (1).
         if (data_type == 0) {
-            // visualizzaPrenotazioni è operatore dell'ADT Studente
-            // output_item(l->value);   
+            visualizzaPrenotazione(l->value);
         } else if (data_type == 1) {
             // output_item(l->value);
         }
