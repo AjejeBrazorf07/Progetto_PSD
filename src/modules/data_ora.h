@@ -17,6 +17,25 @@ void visualizzaData(data d);
 // Prende come parametro due date.
 int comparaData(data d1, data d2);
 
+// Dealloca la struttura Data presa come parametro
+void distruggiData(data d);
+
+//Restituisce il giorno della settimana o -1 per indicare un errore
+// Prende come parametro una data
+int ottieniGiornoSettimana(data d);
+
+// Restituisce il giorno della data o -1 per indicare un errore
+// prende come parametro una data
+int ottieniGiorno(data d);
+
+// Restituisce il mese della data o -1 per indicare un errore
+// Prende come parametro una data
+int ottieniMese(data d);
+
+// Restituisce l'anno della data o -1 per indicare un errore
+// Prende come parametro una data
+int ottieniAnno(data d);
+
 // Alloca dinamicamente e inizializza una nuova struttura orario.
 // Parametri: ora, minuti (componenti numeriche dell'orario)
 // Ritorna: puntatore al nuovo orario creato, o NULL in caso di errore.
@@ -31,8 +50,13 @@ void visualizzaOrario(orario o);
 // Prende come parametro due orari.
 int comparaOrario(orario o1, orario o2);
 
-// Dealloca la struttura Data presa come parametro
-void distruggiData(data d);
-
 // Dealloca la struttura orario presa come parametro
 void distruggiOrario(orario o);
+
+// Restituisce l'ora o -1 per indicare un errore
+// Prende come parametro un orario
+int ottieniOra(orario o);
+
+// Restituisce i minuti, o -1 per indicare un errore
+// Prende come parametro un orario
+int ottieniMinuti(orario o);

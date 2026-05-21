@@ -9,7 +9,7 @@
 int comparaPrenotazioni(item p1, item p2) {
     if (p1 == NULL || p2 == NULL) return 0;
 
-    if (strcmp(ottieniMatricola(p1), ottieniMatricola(p2)) != 0) return 0;
+    if (strcmp(ottieniMatricolaPR(p1), ottieniMatricolaPR(p2)) != 0) return 0;
     if (comparaData(ottieniData(p1), ottieniData(p2)) == 0) return 0;
     if (comparaOrario(ottieniOrarioIngresso(p1), ottieniOrarioIngresso(p2)) == 0) return 0;
     if (comparaOrario(ottieniOrarioUscita(p1), ottieniOrarioUscita(p2)) == 0) return 0;

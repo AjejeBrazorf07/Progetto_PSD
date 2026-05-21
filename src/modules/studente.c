@@ -65,29 +65,20 @@ void visualizzaStudente(studente s) {
 }
     
 
-// Definizione della funzione modificaStudente, che gestisce l'aggiornamento dei campi tramite uno switch.
-// Il parametro 'modifica' sostituisce il puntatore esistente
-void modificaStudente(studente s, int operazione, char *modifica) {
-    if(s==NULL || modifica==NULL) return;
-    
-    switch(operazione) {
-        case 1:
-            free(s->nome);
-            s->nome=modifica;
-            break;
+// Definizione della funzione ottieniNome, che restituisce il nome dello studente
+char* ottieniNome(studente s) {
+    if(s==NULL) return NULL;
+    return s->nome;
+}
 
-        case 2:
-            free(s->matricola);
-            s->matricola=modifica;
-            break;
+// Definizione della funzione ottieniMatricola, che restituisce la matricola dello studente
+char* ottieniMatricolaST(studente s) {
+    if(s==NULL) return NULL;
+    return s->matricola;
+}
 
-        case 3:
-            free(s->corso_laurea);
-            s->corso_laurea=modifica;
-            break;
-
-        default:
-            printf("Campo non valido. \n");
-            break;
-    }
+// Definizione della funzione ottieniCorsoLaurea, che restituisce il corso di laurea dello studente
+char* ottieniCorsoLaurea(studente s) {
+    if(s==NULL) return NULL;
+    return s->corso_laurea;
 }

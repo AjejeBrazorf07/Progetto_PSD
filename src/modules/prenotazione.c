@@ -14,26 +14,38 @@ struct Prenotazione {
 
 
 // Definizione della funzione creaPrenotazione, che crea e inizializza una nuova struttura Prenotazione
-prenotazione creaPrenotazione(char *matricola, data nuova_data, orario ingresso, orario uscita) {
-    struct Prenotazione *p=malloc(sizeof(struct Prenotazione));
-
-    if (p==NULL) {
+prenotazione creaPrenotazione(char *matricola, data nuova_data, orario ingresso, orario uscita, int *posto_assegnato) {
+    if (matricola == NULL) {
         return NULL;
     }
 
-    p->matricola=malloc(strlen(matricola)+1);
+    struct Prenotazione *p = malloc(sizeof(struct Prenotazione));
+    if (p == NULL) {
+        return NULL;
+    }
+
+    p->matricola = malloc(strlen(matricola) + 1);
+
+    if (p->matricola == NULL) {
+        free(p);
+        return NULL;
+    }
 
     strcpy(p->matricola, matricola);
     p->data_prenotazione = nuova_data;
     p->fascia_oraria[0] = ingresso;
     p->fascia_oraria[1] = uscita;
 
-    // valore provvisorio
-    p->posto_assegnato = 0;
+    // Gestione del parametro opzionale posto_assegnato
+    if (posto_assegnato != NULL) {
+        p->posto_assegnato = *posto_assegnato;
+    } else {
+        // valore provvisorio
+        p->posto_assegnato = -1; 
+    }
 
     return p;
 }
-
 
 // Definizione della funzione rimuoviPrenotazione, che dealloca i campi e successivamente la struttura Prenotazione
 void rimuoviPrenotazione(prenotazione p) {
@@ -51,7 +63,7 @@ void rimuoviPrenotazione(prenotazione p) {
 
 
 // Restituisce la matricola o NULL se la prenotazione non è valida
-char* otteniMatricola(prenotazione p) {
+char* otteniMatricolaPR(prenotazione p) {
     if (p == NULL) return NULL;
     return p->matricola;
 }

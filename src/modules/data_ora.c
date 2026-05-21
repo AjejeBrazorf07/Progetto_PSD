@@ -125,3 +125,39 @@ void distruggiOrario(orario o) {
         free(o);
     }
 }
+
+// Restituisce il giorno della settimana o -1 per indicare un errore
+int ottieniGiornoSettimana(data d) {
+    if(d==NULL) return -1;
+    return d->giorno_settimana;
+}
+
+// Restituisce il giorno della data o -1 per indicare un errore
+int ottieniGiorno(data d) {
+    if(d==NULL) return -1;
+    return d->giorno;
+}
+
+// Restituisce il mese della data o -1 per indicare un errore
+int ottieniMese(data d) {
+    if(d==NULL) return -1;
+    return d->mese;
+}
+
+// Restituisce l'anno della data o -1 per indicare un errore
+int ottieniAnno(data d) {
+    if(d==NULL) return -1;
+    return d->anno;
+}
+
+// Restituisce l'ora o -1 per indicare un errore
+int ottieniOra(orario o) {
+    if(o==NULL) return -1;
+    return o->ora;
+}
+
+// Restituisce i minuti, o -1 per indicare un errore
+int ottieniMinuti(orario o) {
+    if(o==NULL) return -1;
+    return o->minuti;
+}
