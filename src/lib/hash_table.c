@@ -2,18 +2,25 @@
 #include <stdlib.h>
 #include <string.h>
 #include "hash_table.h"
-#include "hash_table_item.h"
+
+struct hash_item {
+    char *key;
+    studente s;
+    struct hash_item *next;
+};
 
 struct hash {
     int size;              
     struct hash_item **table; 
 };
 
-int hashFun(char *key, int size);
+static int hashFun(char *key, int size);
 static void deleteList(struct hash_item *p);
+static struct hash_item* newItem(char *key, studente s);
+static void freeItem(struct hash_item *i);static void deleteList(struct hash_item *p);
 
 // Calcola l'indice della tabella hash per una data chiave (matricola) utilizzando l'algoritmo DJB2.
-int hashFun(char *key, int size) {
+static int hashFun(char *key, int size) {
     unsigned long hash = 5381;
     int c;
 
@@ -22,6 +29,38 @@ int hashFun(char *key, int size) {
     }
 
     return (int)(hash % size);
+}
+
+static struct hash_item* newItem(char *key, studente s) {
+    struct hash_item *nuovo = malloc(sizeof(struct hash_item));
+    if (!nuovo) return NULL;
+    
+    nuovo->key = strdup(key);
+    if (!nuovo->key) { free(nuovo); return NULL; }
+    
+    nuovo->s = s;
+    nuovo->next = NULL;
+    return nuovo;
+}
+
+static void freeItem(struct hash_item *i) {
+    if (i) {
+        if (i->key) free(i->key);
+        free(i);
+    }
+}
+
+/*
+ * Dealloca iterativamente tutti i nodi di una lista concatenata,
+ * per evitare il rischio di overflow dello stack in caso di moltissime collisioni.
+ */
+static void deleteList(struct hash_item *p) {
+    struct hash_item *nextNode;
+    while (p != NULL) {
+        nextNode = p->next;  
+        freeItem(p);      
+        p = nextNode;        
+    }
 }
 
 // Crea e inizializza una nuova tabella hash.
@@ -43,25 +82,24 @@ hashtable newHashtable(int size) {
 }
 
 // Inserisce un nuovo elemento nella tabella hash.
-int InsertHash(hashtable h, item elem) {
-    if (elem == NULL || elem->key == NULL) return 0; // Controllo di sicurezza
+int InsertHash(hashtable h, char *key, studente s) {
+    if (h == NULL || key == NULL || s == NULL) return 0;
 
-    int idx = hashFun(elem->key, h->size);
+    int idx = hashFun(key, h->size);
     struct hash_item *head = h->table[idx];
     struct hash_item *curr = head;
 
     // Controllo duplicati
     while (curr) {
-        if (strcmp(curr->key, elem->key) == 0) {
-            return 0;  
-        }
+        if (strcmp(curr->key, key) == 0) return 0;  
         curr = curr->next;
     }
 
-    // Inserimento in testa: l'elem viene direttamente agganciato
+    struct hash_item *elem = newItem(key, s);
+    if (elem == NULL) return 0;
+
     elem->next = head;
     h->table[idx] = elem;
-
     return 1;  
 }
 
@@ -69,7 +107,9 @@ int InsertHash(hashtable h, item elem) {
  * Rimuove un elemento dalla tabella in base alla sua chiave univoca.
  * Ricollega i puntatori della lista concatenata per non spezzare la catena.
  */
-item hashDelete(hashtable h, char *key) {
+studente hashDelete(hashtable h, char *key) {
+    if (h == NULL || key == NULL) return NULL;
+
     int idx = hashFun(key, h->size);
     struct hash_item *prev = h->table[idx];
     struct hash_item *curr = prev;
@@ -82,7 +122,9 @@ item hashDelete(hashtable h, char *key) {
             } else {
                 prev->next = curr->next;
             }
-            return curr; 
+            studente estratto = curr->s;
+            freeItem(curr);
+            return estratto;
         }
         prev = curr;
         curr = curr->next;
@@ -99,17 +141,4 @@ void DestroyHashtable(hashtable h) {
     }
     free(h->table);
     free(h);
-}
-
-/*
- * Dealloca iterativamente tutti i nodi di una lista concatenata,
- * per evitare il rischio di overflow dello stack in caso di moltissime collisioni.
- */
-static void deleteList(struct hash_item *p) {
-    struct hash_item *nextNode;
-    while (p != NULL) {
-        nextNode = p->next;  
-        freeItem(p);      
-        p = nextNode;        
-    }
 }

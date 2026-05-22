@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "file_utils.h"
+#include "list.h"
+#include "hash_table.h"
 #include "modules/studente.h"
 #include "modules/prenotazione.h"
 #include "data_ora.h"
-#include "file_utils.h"
 
 
 /*
@@ -17,7 +20,7 @@ Eva Soldà;NF12100520;Informatica
 
 prenotazioni.txt
 
-2
+1
 NF12100059;01;01/01/2026;12:00;14:00;1
 
 */
@@ -37,16 +40,26 @@ int registraStudente(studente s) {
 }
 
 // Carica tutti gli studenti dal file e restituisce il numero totale di studenti.
-int caricaStudenti() {
+hashtable caricaStudenti() {
     FILE *f = fopen("data/studenti.txt", "r");
 
-    if (f==NULL) return 0;
+    if (f==NULL) return NULL;
 
     char buffer[512];
     const char delimitatori[] = ";\n";
-    
+
     fgets(buffer, sizeof(buffer), f);
     int studenti_totali = atoi(buffer);
+
+    // se studenti_totali = 0, size = 10, altrimenti size = studenti_totali/0.75
+    int size = (studenti_totali > 0) ? (studenti_totali / 0.75) : 10;
+
+    hashtable h = newHashtable(10);
+    if (h == NULL) {
+        fclose(f);
+        return NULL;
+    }
+    
 
     while(fgets(buffer, sizeof(buffer), f) != NULL) {
         char *nome = strtok(buffer, delimitatori);
@@ -54,11 +67,18 @@ int caricaStudenti() {
         char *corso_laurea = strtok(NULL, delimitatori);
 
         studente s = creaStudente(nome, matricola, corso_laurea);
-        // Carica s nella tabella hash
+        
+        int i = InsertHash(h, matricola, s);
+
+        if (i == 0) {
+            perror("Errore nell'inserimento di uno studente nella tabella");
+            fclose(f);
+            return NULL;
+        }
     }
 
     fclose(f);
-    return studenti_totali;
+    return h;
 }
 
 // Salva i dati di una prenotazione in coda al file, 
@@ -77,7 +97,7 @@ int registraPrenotazione(prenotazione p) {
     orario uscita = ottieniOrarioUscita(p);
     fprintf(
         f, 
-        "%s;%d;%d/%d/%d;%d:%d;%d:%d;%d\n", 
+        "%s;%d;%02d/%02d/%04d;%02d:%02d;%02d:%02d;%d\n", 
         ottieniMatricola(p), 
         ottieniGiornoSettimana(d), 
         ottieniGiorno(d), ottieniMese(d), ottieniAnno(d), 
@@ -90,16 +110,16 @@ int registraPrenotazione(prenotazione p) {
     return 1;
 }
 
-// Carica tutte le prenotazioni dal file e restituisce il numero totale di prenotazioni.
-int caricaPrenotazioni() {
+// Carica tutte le prenotazioni dal file nella lista l e restituisce il numero totale di prenotazioni.
+list caricaPrenotazioni() {
+    list l = newList();
+
     FILE *f = fopen("data/prenotazioni.txt", "r");
 
-    if (f==NULL) return 0;
+    if (f==NULL) return NULL;
 
     char buffer[512];
     const char delimitatori[] = ";\n";
-    const char delimitatore_data[] = "/\n";
-    const char delimitatore_orario[] = ":\n";
     
     fgets(buffer, sizeof(buffer), f);
     int prenotazioni_totali = atoi(buffer);
@@ -107,25 +127,28 @@ int caricaPrenotazioni() {
     while(fgets(buffer, sizeof(buffer), f) != NULL) {
         char *matricola = strtok(buffer, delimitatori);
         int giorno_settimana = atoi(strtok(NULL, delimitatori));
-        char *data = strtok(NULL, delimitatori);
-        char *ingresso = strtok(NULL, delimitatori);
-        char *uscita = strtok(NULL, delimitatori);
-        char *posto_assegnato = strtok(NULL, delimitatori);
+        char *data_str = strtok(NULL, delimitatori);
+        char *ingresso_str = strtok(NULL, delimitatori);
+        char *uscita_str = strtok(NULL, delimitatori);
+        int *posto_assegnato = atoi(strtok(NULL, delimitatori));
 
-        int giorno = atoi(strtok(data, delimitatore_data));
-        int mese = atoi(strtok(NULL, delimitatore_data));
-        int anno = atoi(strtok(NULL, delimitatore_data));
+        int giorno, mese, anno;
+        sscanf(data_str, "%d/%d/%d", &giorno, &mese, &anno);
 
-        int ora_ingresso = atoi(strtok(ingresso, delimitatore_orario));
-        int minuti_ingresso = atoi(strtok(NULL, delimitatore_orario));
+        int ora_ingresso, minuti_ingresso;
+        sscanf(ingresso_str, "%d:%d", &ora_ingresso, &minuti_ingresso);
 
-        int ora_uscita = atoi(strtok(uscita, delimitatore_orario));
-        int minuti_uscita = atoi(strtok(NULL, delimitatore_orario));
+        int ora_uscita, minuti_uscita;
+        sscanf(uscita_str, "%d:%d", &ora_uscita, &minuti_uscita);
 
-        prenotazione p = creaPrenotazione(matricola, nuovaData(giorno_settimana, giorno, mese, anno), nuovoOrario(ora_ingresso, minuti_ingresso), nuovoOrario(ora_uscita, minuti_uscita), posto_assegnato);
-        // Carica p nella lista
+        prenotazione p = creaPrenotazione(matricola, nuovaData(giorno_settimana, giorno, mese, anno), nuovoOrario(ora_ingresso, minuti_ingresso), nuovoOrario(ora_uscita, minuti_uscita), &posto_assegnato);
+        
+        if (p != NULL) {
+            l = consList(p, l);
+        }
     }
 
     fclose(f);
-    return prenotazioni_totali;
+    
+    return l;
 }
