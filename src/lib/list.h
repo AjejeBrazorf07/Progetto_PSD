@@ -48,4 +48,4 @@ list reverseList(list l);
 // Stampa a video tutti gli elementi presenti nella lista in modo sequenziale, separandoli con uno spazio.
 // Prende come parametro un puntatore a una lista.
 // Non restituisce alcun valore.
-void outputList(list l);
+void outputList(list l, int data_type);

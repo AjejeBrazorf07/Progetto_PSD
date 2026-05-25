@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "prenotazione.h"
-#include "data_ora.h"
 
 
 struct Prenotazione {
