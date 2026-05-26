@@ -217,3 +217,32 @@ list inizializzaPianoSettimanale() {
     
     return l;
 }
+
+
+// Scorre la lista prenotazioni e per ogni prenotazione aggiorna il posto nella fascia oraria corrispondente
+void associaPosti(list prenotazioni, list settimana) {
+    for(int i = 1; i <= sizeList(prenotazioni); i++) {
+        prenotazione p = (prenotazione) getItem(prenotazioni, i);
+
+        int giorno_sett = ottieniGiornoSettimana(ottieniDataPrenotazione(p));
+        int ingresso = ottieniOra(ottieniOrarioIngresso(p));
+        int posto = ottieniPostoAssegnato(p);
+
+        switch (ingresso) {
+            case 9:
+                aggiornaPosto(settimana, giorno_sett, 0, posto, 1);
+                break;
+            case 11:
+                aggiornaPosto(settimana, giorno_sett, 1, posto, 1);
+                break;
+            case 13:
+                aggiornaPosto(settimana, giorno_sett, 2, posto, 1);
+                break;
+            case 15:
+                aggiornaPosto(settimana, giorno_sett, 3, posto, 1);
+                break;
+        }
+    }
+}
+
+

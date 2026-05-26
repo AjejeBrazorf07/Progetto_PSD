@@ -1,4 +1,5 @@
 #include "data_ora.h"
+#include "list.h"
 
 typedef struct Giorno_settimana *giorno_settimana;
 
@@ -11,6 +12,17 @@ typedef struct Giorno_settimana *giorno_settimana;
 giorno_settimana creaGiornoSettimana(data giorno);
 
 // Verifica se una data appartiene alla settimana corrente (Lun-Ven).
-//Parametri: puntatore a un elemento data d.
+// Parametri: puntatore a un elemento data d.
 // Restituisce 1 se la data fa parte della settimana corrente, 0 altrimenti.
 int verificaDataSettimana(data d);
+
+// Scorre la lista settimana e aggiorna il posto che corrisponde alla fascia oraria con lo stato (0 libero, 1 prenotato, 2 occupato)
+/* Parametri: lista contenente i giorni della settimana, il giorno da ottenere,
+il posto e la fascia oraria della prenotazione, lo stato da associare al posto */
+// Restituisce 1 se l'operazione è andata a buon fine, 0 altrimenti
+int aggiornaPosto(list settimana, int giorno_sett, int fascia_oraria, int posto, int stato);
+
+// Scorre la lista dei giorni della settimana 
+// Parametri: lista contenente i giorni della settimana, il giorno da ottenere, il posto e la fascia oraria della prenotazione
+// Restituisce lo stato del posto corrispondente al giorno e alla fascia oraria della prenotazione, oppure -1 per indicare un errore
+int verificaPosto(list settimana, int giorno_sett, int fascia_oraria, int posto);

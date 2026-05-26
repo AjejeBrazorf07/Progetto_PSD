@@ -30,3 +30,7 @@ list caricaPrenotazioni();
 // Inizializza il piano orario e le aule per la settimana corrente.
 // Restituisce una lista in cui la testa è il lunedì e la coda è il venerdì della settimana corrente.
 list inizializzaPianoSettimanale(void);
+
+// Scorre la lista prenotazioni e per ogni prenotazione aggiorna il posto nell'aula nella fascia oraria corrispondente.
+// Parametri:lista contenente prenotazioni, lista contenente i giorni della settimana
+void associaPosti(list prenotazioni, list settimana);

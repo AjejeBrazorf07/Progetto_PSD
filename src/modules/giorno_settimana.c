@@ -4,6 +4,12 @@
 #include "giorno_settimana.h"
 
 
+// FASCE ORARIE
+// 0 = 9-11
+// 1 = 11-13
+// 2 = 13-15
+// 3 = 15-17
+
 struct Giorno_settimana {
     data giorno;
     int mappa_posti[NUM_FASCE][NUM_POSTI];
@@ -12,25 +18,13 @@ struct Giorno_settimana {
 
 // Crea e inizializza una struttura giorno_settimana.
 giorno_settimana creaGiornoSettimana(data giorno) {
-    struct Giorno_settimana *g = malloc(sizeof(struct Giorno_settimana));
+    struct Giorno_settimana *g = calloc(1, sizeof(struct Giorno_settimana));
 
     if (g == NULL) {
         return NULL;
     }
 
     g->giorno = giorno; 
-
-    for (int i = 0; i < NUM_FASCE; i++) {
-        g->mappa_posti[i] = calloc(NUM_POSTI, sizeof(int));
-
-        if (g->mappa_posti[i] == NULL) {
-            for (int j = 0; j < i; j++) {
-                free(g->mappa_posti[j]);
-            }
-            free(g);
-            return NULL;
-        }
-    }
 
     return g;
 }
@@ -70,4 +64,28 @@ int verificaDataSettimana(data d) {
     }
 
     return 0;
+}
+
+// Scorre la lista settimana e aggiorna il posto che corrisponde alla fascia oraria con lo stato (0 libero, 1 prenotato, 2 occupato)
+int aggiornaPosto(list settimana, int giorno_sett, int fascia_oraria, int posto, int stato) {
+    giorno_settimana g = getItem(settimana, giorno_sett);
+    
+    if (g != NULL && fascia_oraria >= 0 && fascia_oraria < NUM_FASCE && posto >= 0 && posto < NUM_POSTI) {
+        g->mappa_posti[fascia_oraria][posto] = stato;
+        return 1;
+    } 
+    
+    return 0;
+}
+
+// Scorre la lista dei giorni della settimana 
+// Restituisce lo stato del posto corrispondente al giorno e alla fascia oraria della prenotazione, oppure -1 per indicare un errore
+int verificaPosto(list settimana, int giorno_sett, int fascia_oraria, int posto) {
+    giorno_settimana g = getItem(settimana, giorno_sett);
+    
+    if (g != NULL && fascia_oraria >= 0 && fascia_oraria < NUM_FASCE && posto >= 0 && posto < NUM_POSTI) {
+        return g->mappa_posti[fascia_oraria][posto];
+    } 
+    
+    return -1;
 }

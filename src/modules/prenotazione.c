@@ -13,7 +13,7 @@ struct Prenotazione {
 
 
 // Definizione della funzione creaPrenotazione, che crea e inizializza una nuova struttura Prenotazione
-prenotazione creaPrenotazione(char *matricola, data nuova_data, orario ingresso, orario uscita, int *posto_assegnato) {
+prenotazione creaPrenotazione(char *matricola, data nuova_data, orario ingresso, orario uscita, int posto_assegnato) {
     if (matricola == NULL) {
         return NULL;
     }
@@ -35,13 +35,8 @@ prenotazione creaPrenotazione(char *matricola, data nuova_data, orario ingresso,
     p->fascia_oraria[0] = ingresso;
     p->fascia_oraria[1] = uscita;
 
-    // Gestione del parametro opzionale posto_assegnato
-    if (posto_assegnato != NULL) {
-        p->posto_assegnato = *posto_assegnato;
-    } else {
-        // valore provvisorio
-        p->posto_assegnato = -1; 
-    }
+
+    p->posto_assegnato = posto_assegnato;
 
     return p;
 }
