@@ -1,4 +1,4 @@
-#include "modules/studente.h"
+#include "../modules/studente.h"
 
 typedef struct hash *hashtable;
 
@@ -11,14 +11,17 @@ hashtable newHashtable(int size);
 // Prende come parametri il puntatore alla tabella e l'elemento da inserire (di tipo 'item').
 // Restituisce un intero che indica il successo dell'operazione (1) o il fallimento 
 // (0) nel caso in cui l'elemento sia già presente (chiave duplicata).
-int InsertHash(hashtable h, char *key, studente s);
+int InsertHash(hashtable h, const char *key, studente s);
 
 // Rimuove un elemento dalla tabella hash individuandolo tramite la sua chiave.
 // Prende come parametri il puntatore alla tabella e una stringa che rappresenta la chiave dell'elemento.
 // Restituisce un puntatore all'elemento rimosso per consentirne la gestione, oppure NULL se l'elemento non viene trovato.
-studente hashDelete(hashtable h, char *key);
+studente hashDelete(hashtable h, const char *key);
 
 // Dealloca completamente la tabella hash e tutti gli elementi in essa contenuti.
 // Prende come parametro il puntatore alla tabella da eliminare.
 // Non restituisce alcun valore (void), ma libera tutta la memoria associata alla struttura.
 void DestroyHashtable(hashtable h);
+
+
+studente searchHash(hashtable h, const char *key);

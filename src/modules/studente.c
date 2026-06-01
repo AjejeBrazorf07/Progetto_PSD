@@ -46,7 +46,7 @@ studente creaStudente(char *nome, char *matricola, char *corso_laurea) {
 }
 
 // Definizione della funzione rimuoviStudente, che dealloca la memoria prima dei campi interi, e poi della struttura
-void rimuoviStudente(studente s) {
+void distruggiStudente(studente s) {
     if(s!=NULL) {
         free(s->nome);
         free(s->matricola);

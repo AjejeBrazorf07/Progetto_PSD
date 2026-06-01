@@ -66,6 +66,7 @@ int verificaDataSettimana(data d) {
     return 0;
 }
 
+
 // Scorre la lista settimana e aggiorna il posto che corrisponde alla fascia oraria con lo stato (0 libero, 1 prenotato, 2 occupato)
 int aggiornaPosto(list settimana, int giorno_sett, int fascia_oraria, int posto, int stato) {
     giorno_settimana g = getItem(settimana, giorno_sett);
@@ -89,3 +90,4 @@ int verificaPosto(list settimana, int giorno_sett, int fascia_oraria, int posto)
     
     return -1;
 }
+

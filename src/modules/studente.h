@@ -6,7 +6,7 @@ typedef struct Studente *studente;
 studente creaStudente(char *nome, char *matricola, char *corso_laurea);
 
 // Dealloca completamente lo studente e i suoi campi
-void rimuoviStudente(studente s);
+void distruggiStudente(studente s);
 
 // Prende un puntatore a Studente come parametro e stampa i campi della struttura
 void visualizzaStudente(studente s);

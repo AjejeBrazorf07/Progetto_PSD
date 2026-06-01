@@ -33,7 +33,7 @@ int sizeList(list l);
 // Cerca la posizione della prima occorrenza di un elemento specificato all'interno della lista.
 // Prende come parametri un puntatore a una lista e l'elemento da cercare (di tipo item).
 // Restituisce un intero che rappresenta la posizione dell'elemento (partendo da 1), oppure -1 se l'elemento non viene trovato.
-int posItem(list l, item val);
+// int posItem(list l, item val);
 
 // Restituisce l'elemento situato in una determinata posizione all'interno della lista.
 // Prende come parametri un puntatore a una lista e un intero che rappresenta la posizione desiderata (partendo da 1).

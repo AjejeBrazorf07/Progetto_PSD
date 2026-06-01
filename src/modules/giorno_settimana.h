@@ -1,5 +1,5 @@
 #include "data_ora.h"
-#include "list.h"
+#include "../lib/list.h"
 
 typedef struct Giorno_settimana *giorno_settimana;
 

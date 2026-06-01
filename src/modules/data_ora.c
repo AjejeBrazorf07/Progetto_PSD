@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "data_ora.h"
 
 
@@ -160,4 +161,32 @@ int ottieniOra(orario o) {
 int ottieniMinuti(orario o) {
     if(o==NULL) return -1;
     return o->minuti;
+}
+
+/*
+ * Calcola la data esatta (gg/mm/aaaa) della settimana in corso 
+ * a partire dal numero del giorno (1 = Lunedì, 5 = Venerdì).
+ */
+data ottieniDataDaGiornoSettimana(int giorno_scelto) {
+
+    if (giorno_scelto < 1 || giorno_scelto > 5) {
+        return NULL;
+    }
+
+    time_t tempo = time(NULL);
+    struct tm d = *localtime(&tempo);
+
+    if (d.tm_wday == 0) d.tm_wday = 7;
+    int giorni_da_lunedi = d.tm_wday - 1;
+    
+    d.tm_mday -= giorni_da_lunedi;
+    
+
+    mktime(&d);
+
+    d.tm_mday += (giorno_scelto - 1);
+    
+    mktime(&d);
+
+    return nuovaData(giorno_scelto, d.tm_mday, d.tm_mon + 1, d.tm_year + 1900);
 }

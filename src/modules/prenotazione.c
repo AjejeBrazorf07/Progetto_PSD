@@ -57,7 +57,7 @@ void rimuoviPrenotazione(prenotazione p) {
 
 
 // Restituisce la matricola o NULL se la prenotazione non è valida
-char* otteniMatricolaPR(prenotazione p) {
+char* ottieniMatricolaPR(prenotazione p) {
     if (p == NULL) return NULL;
     return p->matricola;
 }
@@ -69,13 +69,13 @@ data ottieniDataPrenotazione(prenotazione p) {
 }
 
 // Restituisce l'orario di ingresso
-orario otteniOrarioIngresso(prenotazione p) {
+orario ottieniOrarioIngresso(prenotazione p) {
     if (p == NULL) return NULL;
     return p->fascia_oraria[0];
 }
 
 // Restituisce l'orario di uscita
-orario otteniOrarioUscita(prenotazione p) {
+orario ottieniOrarioUscita(prenotazione p) {
     if (p == NULL) return NULL;
     return p->fascia_oraria[1];
 }

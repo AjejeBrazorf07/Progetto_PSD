@@ -73,24 +73,24 @@ int sizeList(list l) {
  * Parametri: l (lista da scorrere), val (valore da cercare), data_type (tipo di dato da gestire)
  * Ritorna: posizione (in base 1) o -1 se non trovato.
  */
-int posItem(list l, item val, int data_type) {
+/*int posItem(list l, item val, int data_type) {
     int pos = 1;
     while (l != NULL) {
         // Decide se gestire prenotazioni (0) o giorni della settimana (1).
-        if (data_type==0) {
+        /*if (data_type==0) {
             // comparaPrenotazioni
         } else if (data_type==1) {
 
-        }
+        }*/
 
         /*if (eq(l->value, val)) {
             return pos;
         }
         pos++;
         l = l->next;*/
-    }
-    return -1;
-}
+    //}
+    //return -1;
+//}
 
 /* Recupera il valore alla posizione specificata (in base 1). */
 item getItem(list l, int pos) {

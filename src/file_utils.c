@@ -111,7 +111,7 @@ int registraPrenotazione(prenotazione p) {
     fprintf(
         f, 
         "%s;%d;%02d/%02d/%04d;%02d:%02d;%02d:%02d;%d\n", 
-        ottieniMatricola(p), 
+        ottieniMatricolaPR(p), 
         ottieniGiornoSettimana(d), 
         ottieniGiorno(d), ottieniMese(d), ottieniAnno(d), 
         ottieniOra(ingresso),ottieniMinuti(ingresso),
@@ -162,7 +162,7 @@ list caricaPrenotazioni() {
                 data_prenotazione, 
                 nuovoOrario(ora_ingresso, minuti_ingresso), 
                 nuovoOrario(ora_uscita, minuti_uscita), 
-                &posto_assegnato
+                posto_assegnato
             );
         
             if (p != NULL) {

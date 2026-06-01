@@ -4,7 +4,7 @@ typedef struct Prenotazione *prenotazione;
 
 // Crea una nuova prenotazione vuota e restituisce un puntatore ad essa
 // Parametri: la stringa matricola, una struttura data, due strutture orario e un puntatore al posto assegnato
-prenotazione creaPrenotazione(char *matricola, data nuova_data, orario ingresso, orario uscita, int *posto_assegnato);
+prenotazione creaPrenotazione(char *matricola, data nuova_data, orario ingresso, orario uscita, int posto_assegnato);
 
 // Dealloca la prenotazione e i suoi campi
 // Prende come parametro un puntatore a Prenotazione

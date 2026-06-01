@@ -1,3 +1,5 @@
+#include "../modules/prenotazione.h"
+
 // Il tipo item è definito come un puntatore generico perchè non è noto a priori se l'item è una pretazione o un giorno della settimana
 typedef void *item;
 
