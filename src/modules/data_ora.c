@@ -163,10 +163,9 @@ int ottieniMinuti(orario o) {
     return o->minuti;
 }
 
-/*
- * Calcola la data esatta (gg/mm/aaaa) della settimana in corso 
- * a partire dal numero del giorno (1 = Lunedì, 5 = Venerdì).
- */
+
+// Calcola la data esatta (gg/mm/aaaa) della settimana in corso 
+// a partire dal numero del giorno (1 = Lunedì, 5 = Venerdì).
 data ottieniDataDaGiornoSettimana(int giorno_scelto) {
 
     if (giorno_scelto < 1 || giorno_scelto > 5) {
@@ -178,7 +177,7 @@ data ottieniDataDaGiornoSettimana(int giorno_scelto) {
 
     if (d.tm_wday == 0) d.tm_wday = 7;
     int giorni_da_lunedi = d.tm_wday - 1;
-    
+
     d.tm_mday -= giorni_da_lunedi;
     
 

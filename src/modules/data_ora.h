@@ -60,3 +60,8 @@ int ottieniOra(orario o);
 // Restituisce i minuti, o -1 per indicare un errore
 // Prende come parametro un orario
 int ottieniMinuti(orario o);
+
+// Calcola la data esatta (gg/mm/aaaa) della settimana in corso a partire dal numero del giorno (1 = Lunedì, 5 = Venerdì).
+// Parametri: il giorno della settimana (da 1 a 5)
+// Restituisce la data corrispondente
+data ottieniDataDaGiornoSettimana(int giorno_scelto);

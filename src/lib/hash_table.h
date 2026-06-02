@@ -23,5 +23,7 @@ studente hashDelete(hashtable h, const char *key);
 // Non restituisce alcun valore (void), ma libera tutta la memoria associata alla struttura.
 void DestroyHashtable(hashtable h);
 
-
+// Verifica la presenza di un elemento corrispondente alla chiave nella tabella hash
+// Parametri: tabella hash degli studenti, e la chiave (matricola) dell'oggetto da cercare
+// Restituisce NULL se l'elemento è presente
 studente searchHash(hashtable h, const char *key);

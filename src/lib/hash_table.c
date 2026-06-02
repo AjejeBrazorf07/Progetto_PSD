@@ -132,9 +132,9 @@ studente hashDelete(hashtable h, const char *key) {
     return NULL; 
 }
 
-/*
- * Dealloca completamente la tabella hash e tutte le liste ad essa collegate.
- */
+
+// Dealloca completamente la tabella hash e tutte le liste ad essa collegate.
+
 void DestroyHashtable(hashtable h) {
     for(int i = 0; i < h->size; i++) {
         deleteList(h->table[i]);
@@ -144,6 +144,7 @@ void DestroyHashtable(hashtable h) {
 }
 
 
+// Verifica la presenza di un elemento corrispondente alla chiave presa come parametro nella tabella hash
 studente searchHash(hashtable h, const char *key) {
     if (h == NULL || key == NULL) return NULL;
     
