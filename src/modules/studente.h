@@ -11,7 +11,6 @@ void distruggiStudente(studente s);
 // Prende un puntatore a Studente come parametro e stampa i campi della struttura
 void visualizzaStudente(studente s);
 
-
 // Prende un puntatore a Studente come parametro
 // Restituisce un puntatore alla stringa nome
 char* ottieniNome(studente s);

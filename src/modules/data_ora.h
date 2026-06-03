@@ -36,6 +36,11 @@ int ottieniMese(data d);
 // Prende come parametro una data
 int ottieniAnno(data d);
 
+// Calcola la data esatta (gg/mm/aaaa) della settimana in corso a partire dal numero del giorno (1 = Lunedì, 5 = Venerdì).
+// Parametri: il giorno della settimana (da 1 a 5)
+// Restituisce la data corrispondente
+data ottieniDataDaGiornoSettimana(int giorno_scelto);
+
 // Alloca dinamicamente e inizializza una nuova struttura orario.
 // Parametri: ora, minuti (componenti numeriche dell'orario)
 // Ritorna: puntatore al nuovo orario creato, o NULL in caso di errore.
@@ -60,8 +65,3 @@ int ottieniOra(orario o);
 // Restituisce i minuti, o -1 per indicare un errore
 // Prende come parametro un orario
 int ottieniMinuti(orario o);
-
-// Calcola la data esatta (gg/mm/aaaa) della settimana in corso a partire dal numero del giorno (1 = Lunedì, 5 = Venerdì).
-// Parametri: il giorno della settimana (da 1 a 5)
-// Restituisce la data corrispondente
-data ottieniDataDaGiornoSettimana(int giorno_scelto);

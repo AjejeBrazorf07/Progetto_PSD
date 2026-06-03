@@ -73,24 +73,21 @@ int sizeList(list l) {
  * Parametri: l (lista da scorrere), val (valore da cercare), data_type (tipo di dato da gestire)
  * Ritorna: posizione (in base 1) o -1 se non trovato.
  */
-/*int posItem(list l, item val, int data_type) {
+int posItem(list l, item val, int data_type) {
     int pos = 1;
     while (l != NULL) {
         // Decide se gestire prenotazioni (0) o giorni della settimana (1).
-        /*if (data_type==0) {
-            // comparaPrenotazioni
-        } else if (data_type==1) {
-
-        }*/
-
-        /*if (eq(l->value, val)) {
-            return pos;
+        if (data_type==0) {
+            if (comparaPrenotazioni(val, l->value) == 1) {
+                return pos;
+            }
         }
+
         pos++;
-        l = l->next;*/
-    //}
-    //return -1;
-//}
+        l = l->next;
+    }
+    return -1;
+}
 
 /* Recupera il valore alla posizione specificata (in base 1). */
 item getItem(list l, int pos) {
@@ -120,6 +117,33 @@ list reverseList(list l) {
         current = next;
     }
     return prev;
+}
+
+// Elimina l'elemento in posizione pos dalla lista
+list removeList(list l, int pos) {
+    list l1, prec; 
+
+    if (pos == 0 && l != NULL) {
+        l1 = l;
+        l = tailList(l);
+        free(l1);
+    }
+    else { 
+        int i = 0;
+        prec = l;
+        while (i < pos - 1 && prec != NULL) {
+            prec = prec->next;
+            i++;
+        }
+
+        if (prec != NULL && prec->next != NULL) {
+            l1 = prec->next;
+            prec->next = l1->next;
+            free(l1);
+        }
+    }
+
+    return l;
 }
 
 /* Stampa tutti i valori della lista su una singola riga. 

@@ -12,7 +12,7 @@ int registraStudente(studente s);
 
 // Carica tutti gli studenti dal file
 // Restituisce una tabella hash contenente tutti gli studenti
-hashtable caricaStudenti();
+hashtable caricaStudenti(void);
 
 // Salva i dati di una prenotazione in coda al file, 
 // Usa ';' come delimitatore per i campi di prenotazione
@@ -24,13 +24,18 @@ int registraPrenotazione(prenotazione s);
 
 // Carica tutte le prenotazioni dal file in una lista l
 // Restituisce una lista contenenti tutte le prenotazioni della settimana corrente
-list caricaPrenotazioni();
+list caricaPrenotazioni(void);
 
+
+// Annulla una prenotazione sul file impostando il flag di stato finale a 0.
+// Parametri: lista contenente prenotazioni, stringa matricola, data, orario di ingresso e orario di uscita della prenotazione.
+// Ritorna 1 in caso di successo, 0 se la prenotazione non esiste.
+int cancellaPrenotazione(list prenotazioni, char *matr, data d_pr, orario i, orario u);
 
 // Inizializza il piano orario e le aule per la settimana corrente.
 // Restituisce una lista in cui la testa è il lunedì e la coda è il venerdì della settimana corrente.
 list inizializzaPianoSettimanale(void);
 
 // Scorre la lista prenotazioni e per ogni prenotazione aggiorna il posto nell'aula nella fascia oraria corrispondente.
-// Parametri:lista contenente prenotazioni, lista contenente i giorni della settimana
+// Parametri: lista contenente prenotazioni, lista contenente i giorni della settimana
 void associaPosti(list prenotazioni, list settimana);

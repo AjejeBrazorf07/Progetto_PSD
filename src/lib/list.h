@@ -33,7 +33,7 @@ int sizeList(list l);
 // Cerca la posizione della prima occorrenza di un elemento specificato all'interno della lista.
 // Prende come parametri un puntatore a una lista e l'elemento da cercare (di tipo item).
 // Restituisce un intero che rappresenta la posizione dell'elemento (partendo da 1), oppure -1 se l'elemento non viene trovato.
-// int posItem(list l, item val);
+int posItem(list l, item val);
 
 // Restituisce l'elemento situato in una determinata posizione all'interno della lista.
 // Prende come parametri un puntatore a una lista e un intero che rappresenta la posizione desiderata (partendo da 1).
@@ -44,6 +44,11 @@ item getItem(list l, int pos);
 // Prende come parametro un puntatore a una lista.
 // Restituisce un puntatore alla nuova testa della lista invertita.
 list reverseList(list l);
+
+// Elimina dalla lista l l'elemento in posizione pos
+// Parametri: lista l, intero pos che indica la posizione dell'elemento da rimuovere
+// Restituisce la lista aggiornata
+list removeList(list l, int pos);
 
 // Stampa a video tutti gli elementi presenti nella lista in modo sequenziale, separandoli con uno spazio.
 // Prende come parametro un puntatore a una lista.

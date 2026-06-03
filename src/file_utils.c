@@ -17,7 +17,7 @@ Eva Soldà;NF12100520;Informatica
 prenotazioni.txt
 
 1
-NF12100059;01;01/01/2026;12:00;14:00;1
+NF12100059;01;01/01/2026;12:00;14:00;1;1
 
 */
 
@@ -110,20 +110,21 @@ int registraPrenotazione(prenotazione p) {
     orario uscita = ottieniOrarioUscita(p);
     fprintf(
         f, 
-        "%s;%d;%02d/%02d/%04d;%02d:%02d;%02d:%02d;%d\n", 
+        "%s;%d;%02d/%02d/%04d;%02d:%02d;%02d:%02d;%d;%d\n", 
         ottieniMatricolaPR(p), 
         ottieniGiornoSettimana(d), 
         ottieniGiorno(d), ottieniMese(d), ottieniAnno(d), 
         ottieniOra(ingresso),ottieniMinuti(ingresso),
         ottieniOra(uscita), ottieniMinuti(uscita), 
-        ottieniPostoAssegnato(p)
+        ottieniPostoAssegnato(p),
+        1 // 1 indica prenotazione attiva, 0 prenotazione cancellata
     );
 
     fclose(f); 
     return 1;
 }
 
-// Carica tutte le prenotazioni dal file nella lista l e restituisce il numero totale di prenotazioni.
+// Carica tutte le prenotazioni attive dal file nella lista l e restituisce il numero totale di prenotazioni.
 list caricaPrenotazioni() {
     list l = newList();
 
@@ -144,6 +145,7 @@ list caricaPrenotazioni() {
         char *ingresso_str = strtok(NULL, delimitatori);
         char *uscita_str = strtok(NULL, delimitatori);
         int posto_assegnato = atoi(strtok(NULL, delimitatori));
+        int stato_prenotazione = atoi(strtok(NULL, delimitatori));
 
         int giorno, mese, anno;
         sscanf(data_str, "%d/%d/%d", &giorno, &mese, &anno);
@@ -156,7 +158,7 @@ list caricaPrenotazioni() {
 
         data data_prenotazione = nuovaData(giorno_settimana, giorno, mese, anno);
 
-        if (verificaDataSettimana(data_prenotazione) == 1) {
+        if (verificaDataSettimana(data_prenotazione) == 1 && stato_prenotazione==1) {
             prenotazione p = creaPrenotazione(
                 matricola, 
                 data_prenotazione, 
@@ -178,6 +180,74 @@ list caricaPrenotazioni() {
     fclose(f);
     
     return l;
+}
+
+
+// Annulla una prenotazione sul file impostando il flag di stato finale a 0 (Cancellazione Logica).
+// Ritorna 1 in caso di successo, 0 se la prenotazione non esiste.
+int cancellaPrenotazione(list prenotazioni, char *matr, data d_pr, orario i, orario u) {
+    FILE *f = fopen("data/prenotazioni.txt", "r+");
+
+    if (f==NULL) return NULL;
+
+    char buffer[512];
+    const char delimitatori[] = ";\n";
+    int trovato = 0;
+
+    fgets(buffer, sizeof(buffer), f);
+    // int prenotazioni_totali = atoi(buffer);
+
+    while(fgets(buffer, sizeof(buffer), f) != NULL) {
+        char *matricola = strtok(buffer, delimitatori);
+        int giorno_settimana = atoi(strtok(NULL, delimitatori));
+        char *data_str = strtok(NULL, delimitatori);
+        char *ingresso_str = strtok(NULL, delimitatori);
+        char *uscita_str = strtok(NULL, delimitatori);
+        int posto_assegnato = atoi(strtok(NULL, delimitatori));
+        int stato = atoi(strtok(NULL, delimitatori));
+
+        if (stato == 0) {
+            continue;
+        }
+
+        int giorno, mese, anno;
+        sscanf(data_str, "%d/%d/%d", &giorno, &mese, &anno);
+
+        int ora_ingresso, minuti_ingresso;
+        sscanf(ingresso_str, "%d:%d", &ora_ingresso, &minuti_ingresso);
+
+        int ora_uscita, minuti_uscita;
+        sscanf(uscita_str, "%d:%d", &ora_uscita, &minuti_uscita);
+
+        data data_prenotazione = nuovaData(giorno_settimana, giorno, mese, anno);
+        orario ingresso = nuovoOrario(ora_ingresso, minuti_ingresso);
+        orario uscita = nuovoOrario(ora_uscita, minuti_uscita);
+
+        if (strcmp(matricola, matr) == 0 && comparaData(d_pr, data_prenotazione) == 1 && comparaOrario(i, ingresso) == 1 && comparaOrario(u, uscita) == 1) {
+            trovato = 1;
+
+            fseek(f, -2, SEEK_CUR); 
+            
+            fprintf(f, "0");
+            
+            fflush(f);
+
+            distruggiData(data_prenotazione);
+            distruggiOrario(ingresso);
+            distruggiOrario(uscita);
+            break; 
+        }
+
+        distruggiData(data_prenotazione);
+        distruggiOrario(ingresso);
+        distruggiOrario(uscita);
+    }
+
+    fclose(f);
+    return trovato;
+  
+    
+
 }
 
 

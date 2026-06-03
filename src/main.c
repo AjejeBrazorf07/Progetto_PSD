@@ -100,6 +100,7 @@ list nuovaPrenotazione(hashtable studenti, list prenotazioni, list settimana) {
     char matricola[20];
     char buffer_input[10];
 
+    printf("\033[H\033[J");
     while (getchar() != '\n');
 
     printf("=========================================================\n");
@@ -210,7 +211,7 @@ list nuovaPrenotazione(hashtable studenti, list prenotazioni, list settimana) {
 
     int i;
     for(i = 0; i < 100; i++) {
-        if(verificaPosto(settimana, giorno_scelto, fascia_scelta, i)) {
+        if(verificaPosto(settimana, giorno_scelto, fascia_scelta, i) == 0) {
             break;
         }
     }
@@ -223,26 +224,119 @@ list nuovaPrenotazione(hashtable studenti, list prenotazioni, list settimana) {
         printf("Premere INVIO per tornare al menu...");
         getchar();
         return prenotazioni;
-    }
+    } else printf("Prenotazione confermata! Il tuo posto è il %d\n");
 
     if (data_prenotazione != NULL) {
         prenotazione nuova_p = creaPrenotazione(matricola, data_prenotazione, ingresso, uscita, i);
         
         if (nuova_p != NULL) {
-            // Assegna la lista aggiornata
             prenotazioni = consList(nuova_p, prenotazioni);
             
             aggiornaPosto(settimana, giorno_scelto, fascia_scelta, i, 1);
-            registraPrenotazione(nuova_p); 
-
-            printf("[SUCCESSO] Prenotazione confermata. Posto assegnato: %d\n", i);
+            if (registraPrenotazione(nuova_p) == 1) {
+               printf("[SUCCESSO] Prenotazione confermata. Posto assegnato: %d\n", i); 
+            } else {
+                printf("[ERRORE] Impossibile scrivere i dati nel database.\n");
+                rimuoviPrenotazione(nuova_p);
+            }
         }
     } 
 
+    printf("\n[SUCCESSO] Inserimento terminata\n");
     printf("Premere INVIO per tornare al menu principale...");
     getchar();
 
     return prenotazioni;
+}
+
+
+void annullaPrenotazione(list prenotazioni, list settimana) {
+    char matricola[20];
+    char buffer_input[10];
+
+    prenotazione trovate[50]; 
+    int contatore_trovate = 0;
+
+    printf("\033[H\033[J");
+    while (getchar() != '\n'); 
+
+    printf("=========================================================\n");
+    printf("               ANNULLAMENTO PRENOTAZIONE                 \n");
+    printf("=========================================================\n");
+
+    printf("-> Inserisci la tua Matricola: ");
+    fgets(matricola, sizeof(matricola), stdin);
+    matricola[strcspn(matricola, "\n")] = '\0';
+
+    printf("\nRicerca prenotazioni in corso...\n");
+    printf("---------------------------------------------------------\n");
+
+    int totale_prenotazioni = sizeList(prenotazioni);
+    for (int i = 1; i <= totale_prenotazioni; i++) {
+        prenotazione p = (prenotazione) getItem(prenotazioni, i);
+        
+        if (p != NULL && strcmp(ottieniMatricolaPR(p), matricola) == 0) {
+            trovate[contatore_trovate] = p;
+            contatore_trovate++;
+
+            visualizzaPrenotazione(p);
+        }
+    }
+
+    if (contatore_trovate == 0) {
+        printf("\nNessuna prenotazione attiva trovata per la matricola %s.\n", matricola);
+        printf("Premere INVIO per tornare al menu principale...");
+        getchar();
+        return;
+    }
+
+    printf("---------------------------------------------------------\n");
+    printf("-> Digita il numero della prenotazione da annullare (1-%d, oppure 0 per uscire): ", contatore_trovate);
+    
+    int scelta;
+    scanf("%d", &scelta);
+
+    if (scelta == 0) {
+        printf("\nOperazione annullata. Ritorno al menu principale...\n");
+        return; 
+    }
+
+    if (scelta < 1 || scelta > contatore_trovate) {
+        printf("\n[ERRORE] Scelta non valida.\n");
+        printf("Premere INVIO per tornare al menu principale...");
+        getchar();
+        return;
+    }
+
+    prenotazione da_cancellare = trovate[scelta - 1];
+
+    data d_canc = ottieniDataPrenotazione(da_cancellare);
+    orario ing_canc = ottieniOrarioIngresso(da_cancellare);
+    orario usc_canc = ottieniOrarioUscita(da_cancellare);
+    int posto_canc = ottieniPostoAssegnato(da_cancellare);
+    int giorno_sett = ottieniGiornoSettimana(d_canc);
+    
+
+    int fascia_oraria = (ottieniOra(ing_canc) - 9) / 2;
+
+    printf("\nElaborazione in corso...\n");
+
+    if (cancellaPrenotazione(prenotazioni, matricola, d_canc, ing_canc, usc_canc) == 1) {
+        aggiornaPosto(settimana, giorno_sett, fascia_oraria, posto_canc, 0);
+
+        int pos;
+        if (pos = posItem(prenotazioni, da_cancellare) != -1) {
+            prenotazioni = removeList(prenotazioni, pos);
+        }
+
+        printf("[SUCCESSO] La prenotazione e' stata annullata correttamente!\n");
+        printf("Il posto %d e' di nuovo disponibile.\n", posto_canc);
+    } else {
+        printf("[ERRORE] Si e' verificato un problema nella rimozione dal database.\n");
+    }
+
+    printf("\nPremere INVIO per tornare al menu principale...");
+    getchar();
 }
 
 
@@ -278,7 +372,7 @@ int main() {
 
             case 3:
                 printf("\033[H\033[J");
-                printf("--- ANNULLAMENTO PRENOTAZIONE ---\n");
+                // printf("--- ANNULLAMENTO PRENOTAZIONE ---\n");
                 break;
 
             case 4:
