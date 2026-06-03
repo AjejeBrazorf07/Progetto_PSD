@@ -91,3 +91,44 @@ int verificaPosto(list settimana, int giorno_sett, int fascia_oraria, int posto)
     return -1;
 }
 
+// Stampa il numero di posti disponibili per ogni fascia oraria del giorno preso come parametro
+void visualizzaAulaStudio(int giorno_sett, list settimana) {
+    giorno_settimana g = (giorno_settimana) getItem(settimana, giorno_sett);
+    if(g == NULL) {
+        return;
+    }
+
+    const char *orari_fasce[] = {
+        "09:00 - 11:00",
+        "11:00 - 13:00",
+        "13:00 - 15:00",
+        "15:00 - 17:00"
+    };
+
+    const char *nomi_giorni[] = {
+        " ",
+        "Lunedi'",
+        "Martedi'",
+        "Mercoledi'",
+        "Giovedi'",
+        "Venerdi'"
+    };
+
+    printf("\n=========================================================\n");
+    printf("          SITUAZIONE POSTI LIBERI - %-14s            \n", nomi_giorni[giorno_sett]);
+    printf("=========================================================\n");
+    printf("  %-17s | %-20s\n", "FASCIA ORARIA", "POSTI DISPONIBILI");
+    printf("---------------------------------------------------------\n");
+  
+    for(int i = 0; i<4; i++) {
+        int num_posti = 0;
+
+        for(int j = 0; j < 100; j++) {
+            if(g->mappa_posti[i][j] == 0) {
+                num_posti++;
+            }
+        }
+
+        printf("  %-17s | %d / 100 liberi\n", orari_fasce[i], num_posti);
+    }
+}

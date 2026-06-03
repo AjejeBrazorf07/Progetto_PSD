@@ -224,7 +224,7 @@ list nuovaPrenotazione(hashtable studenti, list prenotazioni, list settimana) {
         printf("Premere INVIO per tornare al menu...");
         getchar();
         return prenotazioni;
-    } else printf("Prenotazione confermata! Il tuo posto è il %d\n");
+    }
 
     if (data_prenotazione != NULL) {
         prenotazione nuova_p = creaPrenotazione(matricola, data_prenotazione, ingresso, uscita, i);
@@ -242,7 +242,7 @@ list nuovaPrenotazione(hashtable studenti, list prenotazioni, list settimana) {
         }
     } 
 
-    printf("\n[SUCCESSO] Inserimento terminata\n");
+    printf("\n[SUCCESSO] Inserimento terminato\n");
     printf("Premere INVIO per tornare al menu principale...");
     getchar();
 
@@ -250,7 +250,7 @@ list nuovaPrenotazione(hashtable studenti, list prenotazioni, list settimana) {
 }
 
 
-void annullaPrenotazione(list prenotazioni, list settimana) {
+list annullaPrenotazione(list prenotazioni, list settimana) {
     char matricola[20];
     char buffer_input[10];
 
@@ -337,6 +337,27 @@ void annullaPrenotazione(list prenotazioni, list settimana) {
 
     printf("\nPremere INVIO per tornare al menu principale...");
     getchar();
+
+    return prenotazioni;
+}
+
+void aggiornamentoPosti(list settimana) {
+    printf("\033[H\033[J");
+    printf("=========================================================\n");
+    printf("                    POSTI DISPONIBILI        \n");
+    printf("=========================================================\n");
+
+    time_t tempo = time(NULL);
+    struct tm d = *localtime(&tempo);
+
+    int giorno_settimana = d.tm_wday;
+
+    while(giorno_settimana <= 5) {
+        visualizzaAulaStudio(giorno_settimana, settimana);
+        giorno_settimana--;
+    }
+
+    
 }
 
 
@@ -371,8 +392,7 @@ int main() {
             }
 
             case 3:
-                printf("\033[H\033[J");
-                // printf("--- ANNULLAMENTO PRENOTAZIONE ---\n");
+                prenotazioni = annullaPrenotazione(prenotazioni, settimana);
                 break;
 
             case 4:
@@ -381,8 +401,7 @@ int main() {
                 break;
 
             case 5:
-                printf("\033[H\033[J");
-                printf("--- AGGIORNAMENTO POSTI DISPONIBILI ---\n");
+                aggiornamentoPosti(settimana);
                 break;
 
             case 6:

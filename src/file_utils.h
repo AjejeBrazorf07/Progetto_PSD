@@ -26,7 +26,6 @@ int registraPrenotazione(prenotazione s);
 // Restituisce una lista contenenti tutte le prenotazioni della settimana corrente
 list caricaPrenotazioni(void);
 
-
 // Annulla una prenotazione sul file impostando il flag di stato finale a 0.
 // Parametri: lista contenente prenotazioni, stringa matricola, data, orario di ingresso e orario di uscita della prenotazione.
 // Ritorna 1 in caso di successo, 0 se la prenotazione non esiste.
