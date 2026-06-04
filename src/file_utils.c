@@ -245,9 +245,6 @@ int cancellaPrenotazione(list prenotazioni, char *matr, data d_pr, orario i, ora
 
     fclose(f);
     return trovato;
-  
-    
-
 }
 
 

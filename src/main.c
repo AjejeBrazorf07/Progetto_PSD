@@ -19,20 +19,17 @@ void stampaMenu() {
     printf("  1. Registrazione Studente\n");
     printf("  2. Inserimento Prenotazione\n");
     printf("  3. Annullamento Prenotazione\n");
-    printf("  4. Verifica Disponibilita' Posti per Fascia Oraria\n");
-    printf("  5. Aggiornamento dei Posti Disponibili\n");
-    printf("  6. Gestione Check-in Prenotati\n");
-    printf("  7. Gestione Check-in Non Prenotati\n");
-    printf("  8. Registrazione Uscita di uno Studente\n");
-    printf("  9. Visualizzazione Studenti (Prenotati, Presenti, Attesa)\n");
-    printf(" 10. Gestione Lista di Attesa\n");
-    printf(" 11. Visualizzazione Storico degli Accessi\n");
-    printf(" 12. Generazione Report\n\n");
+    printf("  4. Verifica Disponibilità Posti per Fascia Oraria\n");
+    printf("  5. Check-in\n");
+    printf("  6. Registrazione Uscita di uno Studente\n");
+    printf("  7. Visualizzazione Studenti (Prenotati, Presenti, Attesa)\n");
+    printf("  8. Gestione Lista di Attesa\n");
+    printf("  9. Visualizzazione Storico degli Accessi\n");
+    printf(" 10. Generazione Report\n\n");
     printf("  0. Esci dal Programma\n\n");
     printf("=========================================================\n");
     printf("\nSeleziona un'opzione: ");
 }
-
 
 void aggiungiStudente(hashtable studenti) {
     printf("\033[H\033[J");
@@ -92,7 +89,6 @@ void aggiungiStudente(hashtable studenti) {
     printf("Premere INVIO per tornare al menu principale...");
     getchar();
 }
-
 
 list nuovaPrenotazione(hashtable studenti, list prenotazioni, list settimana) {
     printf("\033[H\033[J");
@@ -249,7 +245,6 @@ list nuovaPrenotazione(hashtable studenti, list prenotazioni, list settimana) {
     return prenotazioni;
 }
 
-
 list annullaPrenotazione(list prenotazioni, list settimana) {
     char matricola[20];
     char buffer_input[10];
@@ -325,7 +320,7 @@ list annullaPrenotazione(list prenotazioni, list settimana) {
         aggiornaPosto(settimana, giorno_sett, fascia_oraria, posto_canc, 0);
 
         int pos;
-        if (pos = posItem(prenotazioni, da_cancellare) != -1) {
+        if ((pos = posItem(prenotazioni, da_cancellare)) != -1) {
             prenotazioni = removeList(prenotazioni, pos);
         }
 
@@ -360,6 +355,166 @@ void aggiornamentoPosti(list settimana) {
     
 }
 
+void checkInPrenotati(list prenotazioni, list settimana) {
+    char matricola[20];
+
+    int trovata = 0;
+
+    printf("\033[H\033[J");
+    printf("=========================================================\n");
+    printf("               CHECK-IN STUDENTE PRENOTATO               \n");
+    printf("=========================================================\n");
+    
+    printf("-> Inserisci la tua Matricola: ");
+    fgets(matricola, sizeof(matricola), stdin);
+    matricola[strcspn(matricola, "\n")] = '\0';
+
+    time_t tempo = time(NULL);
+    struct tm d = *localtime(&tempo);
+    int minuti_correnti_totali = (d.tm_hour * 60) + d.tm_min;
+    int tolleranza = 30;
+    data oggi = nuovaData(d.tm_wday, d.tm_mday, d.tm_mon+1, d.tm_year+1900);
+
+    printf("\nRicerca prenotazioni per oggi in corso...\n");
+    printf("---------------------------------------------------------\n");
+
+    int totale_prenotazioni = sizeList(prenotazioni);
+    for (int i = 1; i <= totale_prenotazioni; i++) {
+        prenotazione p = (prenotazione) getItem(prenotazioni, i);
+
+        int minuti_inizio_prenotazione = (ottieniOra(ottieniOrarioIngresso(p)) * 60) + ottieniMinuti(ottieniOrarioIngresso(p));
+        
+        if (p != NULL && strcmp(ottieniMatricolaPR(p), matricola) == 0) {
+            if (
+                comparaData(ottieniDataPrenotazione(p), oggi) == 1 && 
+                minuti_correnti_totali >= minuti_inizio_prenotazione && 
+                minuti_correnti_totali <= (minuti_inizio_prenotazione + tolleranza)
+            ) {
+                visualizzaPrenotazione(p);
+
+                int fascia_oraria = (ottieniOra(ottieniOrarioIngresso(p)) - 9) / 2;
+        
+                aggiornaPosto(settimana, ottieniGiornoSettimana(ottieniDataPrenotazione(p)), fascia_oraria, ottieniPostoAssegnato(p), 2);
+
+                int pos;
+                if ((pos = posItem(prenotazioni, p)) != -1) {
+                    prenotazioni = removeList(prenotazioni, pos);
+                }
+
+                printf("\n[SUCCESSO] Check-in completato! Puoi accomodarti al posto %d.\n", ottieniPostoAssegnato(p));
+            } else {
+                printf("[ERRORE] Si e' verificato nelle operazioni di check-in.\n");
+            }
+
+            trovata++;
+            break;
+        }
+    }
+
+    if (trovata == 0) {
+        printf("\nNessuna prenotazione trovata per oggi con la matricola %s.\n", matricola);
+        printf("Premere INVIO per tornare al menu...");
+        getchar();
+        return;
+    }
+    
+    printf("Premere INVIO per continuare...");
+    getchar();
+}
+
+void checkInNonPrenotati(list settimana, queue lista_attesa) {
+    char matricola[20];
+
+    printf("\033[H\033[J");
+    printf("=========================================================\n");
+    printf("             CHECK-IN STUDENTE NON PRENOTATO             \n");
+    printf("=========================================================\n");
+
+    printf("-> Inserisci la tua Matricola: ");
+    fgets(matricola, sizeof(matricola), stdin);
+    matricola[strcspn(matricola, "\n")] = '\0';
+
+    time_t tempo = time(NULL);
+    struct tm d = *localtime(&tempo);
+    
+    int giorno_settimana = d.tm_wday;
+
+    int fascia_corrente = (d.tm_hour - 9) / 2;
+
+    printf("\nOrario rilevato: %02d:%02d\n", d.tm_hour, d.tm_min);
+    printf("Verifica disponibilità posti in corso...\n");
+    printf("---------------------------------------------------------\n");
+
+    // Ricerca di un posto libero
+    int posto_trovato = -1;
+    for (int i = 0; i < 100; i++) {
+        if (verificaPosto(settimana, giorno_settimana, fascia_corrente, i) == 0) {
+            posto_trovato = i;
+            break;
+        }
+    }
+
+    if (posto_trovato != -1) {
+        // posto libero
+        aggiornaPosto(settimana, giorno_settimana, fascia_corrente, posto_trovato, 2);
+            
+        printf("[SUCCESSO] Ingresso autorizzato senza prenotazione!\n");
+        printf("Ti è stato assegnato il posto: %d.\n", posto_trovato);
+    } else {
+        // aula piena
+        printf("\n[ATTENZIONE] Aula PIENA! Nessun posto disponibile nella fascia corrente.\n");
+        printf("Vuoi essere inserito nella Lista d'Attesa per questa fascia? (1 = Si', 0 = No): ");
+        
+        int risposta;
+        scanf("%d", &risposta);
+
+        if (risposta == 1) {
+            enqueue(lista_attesa, matricola); 
+            
+            printf("\n[SUCCESSO] Sei stato inserito nella lista d'attesa.\n");
+            printf("Se qualcuno effettuerà il check-out o annullerà, verrai chiamato automaticamente.\n");
+        } else {
+            printf("\nOperazione annullata. Ingresso negato per mancanza di posti.\n");
+        }
+    }
+
+    printf("\nPremere INVIO per tornare al menu principale...");
+    getchar();
+}
+
+void checkIn(list prenotazioni, list settimana, queue lista_attesa) {
+    char buffer_input[10];
+
+    printf("\033[H\033[J");
+    printf("=========================================================\n");
+    printf("                   GESTIONE CHECK-IN INGRESSO            \n");
+    printf("=========================================================\n");
+    printf("  1. Check-in Studenti PRENOTATI\n");
+    printf("  2. Check-in Studenti NON PRENOTATI\n");
+    printf("---------------------------------------------------------\n");
+    printf("  0. Torna al Menu Principale\n");
+    printf("=========================================================\n");
+    printf("Seleziona un'opzione: ");
+
+    fgets(buffer_input, sizeof(buffer_input), stdin);
+    int scelta = atoi(buffer_input);
+
+    switch(scelta) {
+        case 1:
+            checkInPrenotati(prenotazioni, settimana);
+            break;
+        case 2:
+            checkInNonPrenotati(settimana, lista_attesa);
+            break;
+        case 0:
+            return;
+        default:
+            printf("\nOpzione non valida. Premere INVIO per tornare...");
+            getchar();
+            break;
+    }
+}
+
 
 int main() {
     int scelta = -1;
@@ -369,6 +524,8 @@ int main() {
     list settimana = inizializzaPianoSettimanale();
 
     associaPosti(prenotazioni, settimana);
+
+    queue lista_attesa = newQueue();
 
     do {
         stampaMenu();
@@ -396,45 +553,34 @@ int main() {
                 break;
 
             case 4:
-                printf("\033[H\033[J");
-                printf("--- VERIFICA DISPONIBILITA' POSTI ---\n");
+                aggiornamentoPosti(settimana);
                 break;
 
             case 5:
-                aggiornamentoPosti(settimana);
+                checkIn(prenotazioni, settimana, lista_attesa);
                 break;
 
             case 6:
                 printf("\033[H\033[J");
-                printf("--- GESTIONE CHECK-IN PRENOTATI ---\n");
+                printf("--- REGISTRAZIONE USCITA STUDENTE ---\n");
                 break;
 
             case 7:
                 printf("\033[H\033[J");
-                printf("--- GESTIONE CHECK-IN NON PRENOTATI ---\n");
+                printf("--- VISUALIZZAZIONE STUDENTI ---\n");
                 break;
 
             case 8:
                 printf("\033[H\033[J");
-                printf("--- REGISTRAZIONE USCITA STUDENTE ---\n");
+                printf("--- GESTIONE LISTA DI ATTESA ---\n");
                 break;
 
             case 9:
                 printf("\033[H\033[J");
-                printf("--- VISUALIZZAZIONE STUDENTI ---\n");
-                break;
-
-            case 10:
-                printf("\033[H\033[J");
-                printf("--- GESTIONE LISTA DI ATTESA ---\n");
-                break;
-
-            case 11:
-                printf("\033[H\033[J");
                 printf("--- STORICO DEGLI ACCESSI ---\n");
                 break;
 
-            case 12:
+            case 10:
                 printf("\033[H\033[J");
                 printf("--- GENERAZIONE REPORT ---\n");
                 break;
