@@ -1,5 +1,3 @@
-#include "modules/studente.h"
+typedef char *item;
 
-typedef studente *item;
-
-#define NULLITEM NULL;
+#define NULLITEM NULL

@@ -290,6 +290,7 @@ list annullaPrenotazione(list prenotazioni, list settimana) {
     
     int scelta;
     scanf("%d", &scelta);
+    getchar();
 
     if (scelta == 0) {
         printf("\nOperazione annullata. Ritorno al menu principale...\n");
@@ -422,7 +423,7 @@ void checkInPrenotati(list prenotazioni, list settimana) {
     getchar();
 }
 
-void checkInNonPrenotati(list settimana, queue lista_attesa) {
+queue checkInNonPrenotati(list settimana, queue lista_attesa) {
     char matricola[20];
 
     printf("\033[H\033[J");
@@ -467,22 +468,31 @@ void checkInNonPrenotati(list settimana, queue lista_attesa) {
         
         int risposta;
         scanf("%d", &risposta);
+        getchar();
 
         if (risposta == 1) {
-            enqueue(lista_attesa, matricola); 
+            char *matricola_copia = malloc((strlen(matricola) + 1) * sizeof(char));
             
-            printf("\n[SUCCESSO] Sei stato inserito nella lista d'attesa.\n");
-            printf("Se qualcuno effettuerà il check-out o annullerà, verrai chiamato automaticamente.\n");
-        } else {
-            printf("\nOperazione annullata. Ingresso negato per mancanza di posti.\n");
+            if (matricola_copia != NULL) {
+                strcpy(matricola_copia, matricola);
+                enqueue(matricola_copia, lista_attesa);
+            
+            
+                printf("\n[SUCCESSO] Sei stato inserito nella lista d'attesa.\n");
+                printf("Se qualcuno effettuerà il check-out o annullerà, verrai chiamato automaticamente.\n");
+            } else {
+                printf("\nOperazione annullata. Ingresso negato per mancanza di posti.\n");
+            }
         }
     }
 
     printf("\nPremere INVIO per tornare al menu principale...");
     getchar();
+
+    return lista_attesa;
 }
 
-void checkIn(list prenotazioni, list settimana, queue lista_attesa) {
+queue checkIn(list prenotazioni, list settimana, queue lista_attesa) {
     char buffer_input[10];
 
     printf("\033[H\033[J");
@@ -504,7 +514,94 @@ void checkIn(list prenotazioni, list settimana, queue lista_attesa) {
             checkInPrenotati(prenotazioni, settimana);
             break;
         case 2:
-            checkInNonPrenotati(settimana, lista_attesa);
+            lista_attesa = checkInNonPrenotati(settimana, lista_attesa);
+            break;
+        case 0:
+            return;
+        default:
+            printf("\nOpzione non valida. Premere INVIO per tornare...");
+            getchar();
+            break;
+    }
+
+    return lista_attesa;
+}
+
+void visualizzaListaAttesa(queue lista_attesa) {
+    printf("=========================================================\n");
+    printf("               STATO ATTUALE LISTA D'ATTESA              \n");
+    printf("=========================================================\n");
+
+    if (lista_attesa == NULL || emptyQueue(lista_attesa) == 1) {
+        printf("\n  [INFO] Non ci sono studenti in lista d'attesa.\n");
+        printf("=========================================================\n");
+        printf("Premere INVIO per tornare al menu...");
+        getchar();
+        return;
+    }
+
+    int i = 1;
+    while(emptyqueue(lista_attesa)!=0) {
+        item mat = dequeue(lista_attesa);
+        if (mat != NULL) {
+            printf("  %2d° posto   | %-20s\n", i, mat);
+            enqueue(mat, lista_attesa);
+            i++;
+        }
+    }    
+}
+
+queue cancellaDaListaAttesa(queue lista_attesa) {
+    if (lista_attesa == NULL || emptyQueue(lista_attesa) == 1) {
+        printf("\nLa lista d'attesa e' attualmente vuota.\n");
+        printf("Premere INVIO per continuare...");
+        getchar();
+        return;
+    }
+
+    char matricola [20];
+
+    printf("-> Inserisci la tua Matricola: ");
+    fgets(matricola, sizeof(matricola), stdin);
+    matricola[strcspn(matricola, "\n")] = '\0';
+
+    while(emptyqueue(lista_attesa)!=0) {
+        item mat = dequeue(lista_attesa);
+        if (mat != NULL) {
+            if(strcmp(mat, matricola) == 0) {
+                free(mat);
+            } else enqueue(mat, lista_attesa);
+        } 
+    }    
+
+    printf("\n Operazione eseguita");
+}
+
+
+queue gestioneListaAttesa(queue lista_attesa) {
+
+    printf("\033[H\033[J"); 
+    printf("=========================================================\n");
+    printf("               GESTIONE LISTA D'ATTESA (CODA)            \n");
+    printf("=========================================================\n");
+    printf("  1. Visualizza Studenti in Lista d'Attesa (Stato Coda)\n");
+    printf("  2. Rimuovi Studente dalla Lista (Uscita Volontaria)\n");
+    printf("---------------------------------------------------------\n");
+    printf("  0. Torna al Menu Principale\n");
+    printf("=========================================================\n");
+    printf("Seleziona un'operazione: ");
+
+    int scelta;
+    scanf("%d", &scelta);
+    getchar();
+
+    switch(scelta) {
+        case 1:
+            visualizzaListaAttesa(lista_attesa);
+            break;
+        case 2:
+            lista_attesa = cancellaDaListaAttesa(lista_attesa);
+            return lista_attesa;
             break;
         case 0:
             return;
@@ -514,7 +611,6 @@ void checkIn(list prenotazioni, list settimana, queue lista_attesa) {
             break;
     }
 }
-
 
 int main() {
     int scelta = -1;
@@ -557,7 +653,7 @@ int main() {
                 break;
 
             case 5:
-                checkIn(prenotazioni, settimana, lista_attesa);
+                lista_attesa = checkIn(prenotazioni, settimana, lista_attesa);
                 break;
 
             case 6:
@@ -571,8 +667,7 @@ int main() {
                 break;
 
             case 8:
-                printf("\033[H\033[J");
-                printf("--- GESTIONE LISTA DI ATTESA ---\n");
+                lista_attesa = gestioneListaAttesa(lista_attesa);
                 break;
 
             case 9:
