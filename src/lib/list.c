@@ -9,24 +9,20 @@ struct node {
     struct node *next;
 };
 
-/* Inizializza una lista vuota restituendo un puntatore nullo. */
+// Inizializza una lista vuota restituendo un puntatore nullo. 
 list newList(void) {
     return NULL;
 }
 
-/*
- * Verifica se la lista è vuota.
- * Ritorna: 1 se vuota, 0 altrimenti.
- */
+// Verifica se la lista è vuota.
+// Ritorna: 1 se vuota, 0 altrimenti.
 int emptyList(list l) {
     return l == NULL;
 }
 
-/*
- * Inserisce un elemento in testa alla lista.
- * Se l'allocazione fallisce, interrompe il programma per evitare 
- * comportamenti indefiniti a valle.
- */
+// Inserisce un elemento in testa alla lista.
+// Se l'allocazione fallisce, interrompe il programma per evitare 
+// comportamenti indefiniti a valle.
 list consList(item val, list l) {
     list new_node = (list)malloc(sizeof(struct node));
     if (new_node == NULL) {
@@ -38,7 +34,7 @@ list consList(item val, list l) {
     return new_node;
 }
 
-/* Ritorna il resto della lista escludendo il primo nodo. */
+// Restituisce il resto della lista escludendo il primo nodo.
 list tailList(list l) {
     if (emptyList(l)) {
         fprintf(stderr, "Errore: coda di una lista vuota.\n");
@@ -47,7 +43,7 @@ list tailList(list l) {
     return l->next;
 }
 
-/* Ritorna il valore in testa alla lista senza rimuoverlo. */
+// Restituisce il valore in testa alla lista senza rimuoverlo.
 item getFirst(list l) {
     if (emptyList(l)) {
         fprintf(stderr, "Errore: primo elemento di una lista vuota.\n");
@@ -56,9 +52,8 @@ item getFirst(list l) {
     return l->value;
 }
 
-/* * Calcola la lunghezza della lista.
- * Richiede lo scorrimento completo dell'intera struttura (costo lineare).
- */
+// Calcola la lunghezza della lista.
+// Richiede lo scorrimento completo dell'intera struttura
 int sizeList(list l) {
     int count = 0;
     while (l != NULL) {
@@ -68,28 +63,24 @@ int sizeList(list l) {
     return count;
 }
 
-/*
- * Cerca la prima occorrenza di un valore.
- * Parametri: l (lista da scorrere), val (valore da cercare), data_type (tipo di dato da gestire)
- * Ritorna: posizione (in base 1) o -1 se non trovato.
- */
-int posItem(list l, item val, int data_type) {
+// Cerca la prima occorrenza di un valore.
+// Parametri: l (lista da scorrere), val (valore da cercare)
+// Restituisce posizione (in base 1) o -1 se non trovato.
+// Vale solo per l'item prenotazione
+int posItem(list l, item val) {
     int pos = 1;
     while (l != NULL) {
-        // Decide se gestire prenotazioni (0) o giorni della settimana (1).
-        if (data_type==0) {
             if (comparaPrenotazioni(val, l->value) == 1) {
                 return pos;
             }
-        }
-
+        
         pos++;
         l = l->next;
     }
     return -1;
 }
 
-/* Recupera il valore alla posizione specificata (in base 1). */
+// Recupera il valore alla posizione specificata (in base 1).
 item getItem(list l, int pos) {
     int count = 1;
     while (l != NULL) {
@@ -102,9 +93,8 @@ item getItem(list l, int pos) {
     return NULLITEM;
 }
 
-/* * Inverte l'ordine dei nodi nella lista modificando i puntatori (in-place).
- * Ritorna: la nuova testa della lista invertita.
- */
+// Inverte l'ordine dei nodi nella lista modificando i puntatori (in-place).
+// Restituisce la nuova testa della lista invertita.
 list reverseList(list l) {
     list prev = NULL;
     list current = l;
@@ -146,9 +136,8 @@ list removeList(list l, int pos) {
     return l;
 }
 
-/* Stampa tutti i valori della lista su una singola riga. 
-Parametri: l (lista da scorrere), data_type (tipo di dato da gestire)
-*/
+// Stampa tutti i valori della lista su una singola riga. 
+// Parametri: l (lista da scorrere), data_type (tipo di dato da gestire)
 void outputList(list l, int data_type) {
     while (l != NULL) {
         // Decide se gestire prenotazioni (0) o giorni della settimana (1).

@@ -313,3 +313,136 @@ void associaPosti(list prenotazioni, list settimana) {
 }
 
 
+// Legge nel file prenotazioni.txt e restituisce il numero di prenotazioni totali contenuto in esso
+int mostraPrenotazioni(void) {
+    FILE *f = fopen("../data/prenotazioni.txt", "r");
+
+    if (f==NULL) return 0;
+
+    char buffer[50];
+    fgets(buffer, sizeof(buffer), f);
+    int prenotazioni_totali = atoi(buffer);
+
+    fclose(f);
+
+    return prenotazioni_totali;
+}
+
+// Legge nel file accessi_effettivi.txt e restituisce il numero di accessi effettivi totali contenuto in esso
+int mostraAccessiEffettivi(void) {
+    FILE *f = fopen("../data/report/accessi_effettivi.txt", "r");
+
+    if (f==NULL) return 0;
+
+    char buffer[50];
+    fgets(buffer, sizeof(buffer), f);
+    int accessi_effettivi = atoi(buffer);
+
+    fclose(f);
+
+    return accessi_effettivi;
+}
+
+// Aumenta di uno il numero di accessi effettivi nel file accessi_effettivi.txt e restituisce il numero aggiornato
+int aggiornaAccessiEffettivi(void) {
+    int accessi_effettivi = mostraAccessiEffettivi();
+
+    FILE *f = fopen("../data/report/accessi_effettivi.txt", "w");
+
+    accessi_effettivi++;
+    fprintf(f, "%d", accessi_effettivi);
+
+    fclose(f);
+
+    return accessi_effettivi;
+}
+
+// Legge nel file studenti_in_attesa.txt e restituisce il numero di studenti in attesa contenuto in esso
+int mostraStudentiInAttesa(void) {
+    FILE *f = fopen("../data/report/studenti_in_attesa.txt", "r");
+
+    if (f==NULL) return 0;
+
+    char buffer[50];
+    fgets(buffer, sizeof(buffer), f);
+    int studenti_in_attesa = atoi(buffer);
+
+    fclose(f);
+
+    return studenti_in_attesa;
+}
+
+// Se operazione = 1, aumenta di uno il numero di studenti in attesa nel file studenti_in:attesa.txt
+// Se operazione == 0, diminuisce di uno gli studenti in attesa
+int aggiornaStudentiInAttesa(int operazione) {
+    int studenti_in_attesa = mostraAccessiEffettivi();
+
+    FILE *f = fopen("../data/report/studenti_in_attesa.txt", "w");
+
+    if(operazione == 1) { 
+        studenti_in_attesa++;
+        fprintf(f, "%d", studenti_in_attesa);
+    } else {
+        studenti_in_attesa--;
+        fprintf(f, "%d", studenti_in_attesa);
+    }
+
+    fclose(f);
+
+    return studenti_in_attesa;
+}
+
+int mostraStudentiNoshow(void) {
+    FILE *f = fopen("../data/report/studenti_noshow.txt", "r");
+
+    if (f==NULL) return 0;
+
+    char buffer[50];
+    fgets(buffer, sizeof(buffer), f);
+    int studenti_noshow = atoi(buffer);
+
+    fclose(f);
+
+    return studenti_noshow;
+}
+
+int aggiornaStudentiNoshow(void) {
+    int studenti_noshow = mostraStudentiiNoshow();
+
+    FILE *f = fopen("../data/report/studenti_noshow.txt", "w");
+
+    studenti_noshow++;
+    fprintf(f, "%d", studenti_noshow);
+
+    fclose(f);
+
+    return studenti_noshow;
+}
+
+int mostraStoricoAccessi(void) {
+    FILE *f = fopen("../data/report/storico_accessi.txt", "r");
+
+    if (f==NULL) return 0;
+
+    char buffer[50];
+    fgets(buffer, sizeof(buffer), f);
+    int storico_accessi = atoi(buffer);
+
+    fclose(f);
+
+    return storico_accessi;
+}
+
+// Aumenta di uno il numero di accessi nel file storico_accessi.txt e restituisce il numero aggiornato
+int aggiornaStoricoAccessi(void) {
+    int storico_accessi = mostraStoricoAccessi();
+
+    FILE *f = fopen("../data/report/storico_accessi.txt", "w");
+
+    storico_accessi++;
+    fprintf(f, "%d", storico_accessi);
+
+    fclose(f);
+
+    return storico_accessi;
+}

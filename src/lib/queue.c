@@ -17,7 +17,7 @@ struct c_queue {
  * Inizializza una nuova coda vuota allocando la memoria necessaria.
  * Ritorna: puntatore alla nuova coda, o NULL in caso di errore.
  */
-queue newQueue(void) {
+queue newqueue(void) {
     struct c_queue *q = malloc(sizeof(struct c_queue));
 
     if (q == NULL)
@@ -34,7 +34,7 @@ queue newQueue(void) {
  * Parametri: q (puntatore alla coda)
  * Ritorna: 1 se vuota, 0 se contiene elementi, -1 se la struttura è NULL.
  */
-int emptyQueue(queue q) {
+int emptyqueue(queue q) {
      if (q == NULL) 
             return -1; 
      return q->numel == 0; 
