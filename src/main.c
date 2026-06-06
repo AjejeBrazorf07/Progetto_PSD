@@ -24,8 +24,9 @@ void stampaMenu() {
     printf("  6. Check-out\n");
     printf("  7. Visualizzazione Studenti (Prenotati, Presenti, Attesa)\n");
     printf("  8. Gestione Lista di Attesa\n");
-    printf("  9. Visualizzazione Storico degli Accessi\n");
-    printf(" 10. Report settimanale\n\n");
+    printf("  9. Refresh prenotazioni scadute\n");
+    printf(" 10. Storico degli Accessi\n");
+    printf(" 11. Report\n\n");
     printf("  0. Esci dal Programma\n\n");
     printf("=========================================================\n");
     printf("\nSeleziona un'opzione: ");
@@ -893,10 +894,39 @@ void menuStoricoAccessi() {
 
 
 void report(list settimana, list prenotazioni, queue lista_attesa) {
+    // 1. Recupero dei dati dalle tue funzioni
     int prenotazioni_totali = mostraPrenotazioni();
     int accessi_effettivi = mostraAccessiEffettivi();
     int studenti_in_attesa = mostraStudentiInAttesa();
     int studenti_noshow = mostraStudentiNoshow();
+    
+    int fasce_orarie[4] = {0};
+    occupazionePerFasciaOraria(fasce_orarie);
+
+    printf("\033[H\033[J"); // Pulisce lo schermo
+    printf("=========================================================\n");
+    printf("                       REPORT GENERALE                   \n");
+    printf("=========================================================\n");
+    
+    printf("  DATI:\n");
+    printf("  -----------------------------------------------------\n");
+    printf("  Prenotazioni Totali:         %d\n", prenotazioni_totali);
+    printf("  Accessi Effettivi: %d\n", accessi_effettivi);
+    printf("  Studenti che non si sono presentati:   %d\n", studenti_noshow);
+    printf("  Studenti in Lista d'Attesa:   %d\n", studenti_in_attesa);
+    printf("=========================================================\n\n");
+
+    // Tabella della distribuzione per fasce
+    printf("  PRENOTAZIONI PER FASCIA ORARIA:\n");
+    printf("  -----------------------------------------------------\n");
+    printf("  Fascia 09:00 - 11:00:         %d studenti\n", fasce_orarie[0]);
+    printf("  Fascia 11:00 - 13:00:         %d studenti\n", fasce_orarie[1]);
+    printf("  Fascia 13:00 - 15:00:         %d studenti\n", fasce_orarie[2]);
+    printf("  Fascia 15:00 - 17:00:         %d studenti\n", fasce_orarie[3]);
+    printf("=========================================================\n");
+    
+    printf("\nPremere INVIO per tornare al menu principale...");
+    getchar();
 }
 
 int main() {
@@ -957,12 +987,15 @@ int main() {
                 break;
 
             case 9:
-                menuStoricoAccessi();
+                cancellaPrenotazioniScadute(settimana, lista_attesa, studenti_in_aula);
                 break;
 
             case 10:
-                printf("\033[H\033[J");
-                printf("--- REPORT SETTIMANALE ---\n");
+                menuStoricoAccessi();
+                break;
+
+            case 11:
+                report(settimana, prenotazioni, lista_attesa);
                 break;
 
             case 0:

@@ -69,3 +69,5 @@ int aggiornaStudentiNoshow(void);
 int mostraStoricoAccessi(void);
 
 int aggiornaStoricoAccessi(void);
+
+void occupazionePerFasciaOraria(int fasce_orarie[]);

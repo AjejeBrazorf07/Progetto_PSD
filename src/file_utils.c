@@ -446,3 +446,34 @@ int aggiornaStoricoAccessi(void) {
 
     return storico_accessi;
 }
+
+
+void occupazionePerFasciaOraria(int fasce_orarie[]) {
+    FILE *f = fopen("data/prenotazioni.txt", "r");
+
+    char buffer[512];
+    const char delimitatori[] = ";\n";
+    
+    fgets(buffer, sizeof(buffer), f);
+    // int prenotazioni_totali = atoi(buffer);
+
+    while(fgets(buffer, sizeof(buffer), f) != NULL) {
+        char *matricola = strtok(buffer, delimitatori);
+        int giorno_settimana = atoi(strtok(NULL, delimitatori));
+        char *data_str = strtok(NULL, delimitatori);
+        char *ingresso_str = strtok(NULL, delimitatori);
+        char *uscita_str = strtok(NULL, delimitatori);
+        int posto_assegnato = atoi(strtok(NULL, delimitatori));
+        int stato_prenotazione = atoi(strtok(NULL, delimitatori));
+
+        int ora_ingresso, minuti_ingresso;
+        sscanf(ingresso_str, "%d:%d", &ora_ingresso, &minuti_ingresso);
+
+        if (stato_prenotazione==1) {
+            int fascia = (ora_ingresso - 9) / 2;
+            fasce_orarie[fascia]++;
+        }
+    }
+
+    fclose(f);
+}
