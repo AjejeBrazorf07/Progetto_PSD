@@ -38,36 +38,3 @@ list inizializzaPianoSettimanale(void);
 // Scorre la lista prenotazioni e per ogni prenotazione aggiorna il posto nell'aula nella fascia oraria corrispondente.
 // Parametri: lista contenente prenotazioni, lista contenente i giorni della settimana
 void associaPosti(list prenotazioni, list settimana);
-
-// Legge nel file prenotazioni.txt e restituisce il numero di prenotazioni totali contenuto in esso
-// Parametri: nessuno
-int mostraPrenotazioni(void);
-
-// Aumenta di uno il numero di accessi effettivi nel file accessi_effettivi.txt 
-// Parametri: nessuno
-// Restituisce il numero di accessi aggiornato
-int aggiornaAccessiEffettivi(void);
-
-// Legge nel file accessi_effettivi.txt e restituisce il numero di accessi effettivi totali contenuto in esso
-// Parametri: nessuno
-int mostraAccessiEffettivi(void);
-
-// Legge nel file studenti_in_attesa.txt e restituisce il numero di studenti_in_attesa contenuti in esso
-// Parametri: nessuno
-int mostraStudentiInAttesa(void);
-
-// Se operazione è uguale a 1, aumenta di 1 il nuemero di studenti in attesa contenuti in studenti_in_attesa.txt
-// Se operazione è uguale a 0, diminuisce di 1 il nuemero di studenti in attesa contenuti in studenti_in_attesa.txt
-// Parametri: operazione, un intero che indica l'operazione che deve eseguire la funzione
-// Restituisce il numero aggiornato di studenti in attesa
-int aggiornaStudentiInAttesa(int operazione);
-
-int mostraStudentiNoshow(void);
-
-int aggiornaStudentiNoshow(void);
-
-int mostraStoricoAccessi(void);
-
-int aggiornaStoricoAccessi(void);
-
-void occupazionePerFasciaOraria(int fasce_orarie[]);
