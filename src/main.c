@@ -5,11 +5,13 @@
 #include "modules/studente.h"
 #include "modules/prenotazione.h"
 #include "modules/data_ora.h"
+#include "giorno_settimana.h"
 #include "lib/list.h"
 #include "lib/queue.h"
 #include "lib/hash_table.h"
 #include "utils/report.h"
 #include "utils/load.h"
+#include "utils/menu.h"
 
 
 int main() {
@@ -82,8 +84,7 @@ int main() {
                 break;
 
             case 0:
-                printf("\nChiusura del sistema. Salvataggio dati in corso...\n");
-                // TODO: Freeing della memoria
+                chiusuraProgramma(settimana, studenti_in_aula, lista_attesa, prenotazioni, studenti);
                 break;
 
             default:
