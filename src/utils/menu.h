@@ -1,6 +1,6 @@
-#include "lib/list.h"
-#include "lib/hash_table.h"
-#include "lib/queue.h"
+#include "../lib/list.h"
+#include "../lib/hash_table.h"
+#include "../lib/queue.h"
 
 // Mostra il menu principale con le opzioni del sistema di gestione dell'aula studio
 void stampaMenu(void);
@@ -32,7 +32,7 @@ void checkInPrenotati(list prenotazioni, list settimana, list studenti_in_aula);
 // Restituisce: la coda aggiornata della lista d'attesa
 queue checkInNonPrenotati(list settimana, queue lista_attesa, list studenti_in_aula);
 
-// Sottomenu intermedio per smistare lo studente verso il Check-in Prenotati o Non Prenotati
+// Interfaccia per la gestione del check-in (prenotati e non prenotati)
 // Parametri: prenotazioni, settimana, studenti_in_aula, lista_attesa
 // Restituisce: la coda aggiornata della lista d'attesa
 queue checkIn(list prenotazioni, list settimana, list studenti_in_aula, queue lista_attesa);
@@ -57,10 +57,9 @@ void checkOut(list settimana, list studenti_in_aula, queue lista_attesa);
 
 // Mostra l'affluenza per la fascia oraria corrente
 // Parametri: studenti_in_aula, lista_attesa, settimana
-// Restituisce: niente (void)
 void visualizzaStudenti(list studenti_in_aula, queue lista_attesa, list settimana);
 
-// Funzione di riconciliazione: azzera i posti prenotati ma mai occupati (No-Show dopo 30 min) e fa avanzare la coda
+// azzera i posti prenotati ma mai occupati (No-Show dopo 30 min) e fa avanzare la coda
 // Parametri: settimana, lista_attesa, studenti_in_aula
 void cancellaPrenotazioniScadute(list settimana, queue lista_attesa, list studenti_in_aula);
 
@@ -70,3 +69,8 @@ void menuStoricoAccessi(void);
 // Mostra il resoconto globale dell'aula, incluse prenotazioni, accessi effettivi, no-show e distribuzione fasce
 // Parametri: settimana, prenotazioni, lista_attesa
 void report(list settimana, list prenotazioni, queue lista_attesa);
+
+// Dealloca la memoria delle strutture usate dal programma alla sua chiusura
+/* Parametri: settimana (mappa posti), studenti_in_aula (lista presenti da aggiornare), lista_attesa (coda per il subentro), 
+studenti (tabella hash che contiene tutti gli studenti registrati), prenotazioni (lista di tutte le prenotazioni) */
+void chiusuraProgramma(list settimana, list studenti_in_aula, queue lista_attesa, list prenotazioni, hashtable studenti);

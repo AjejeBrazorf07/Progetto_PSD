@@ -3,11 +3,12 @@
 #include <string.h>
 #include <time.h>
 #include "menu.h"
-#include "modules/studente.h"
-#include "modules/prenotazione.h"
-#include "modules/data_ora.h"
-#include "utils/report.h"
-#include "utils/load.h"
+#include "../modules/studente.h"
+#include "../modules/prenotazione.h"
+#include "../modules/data_ora.h"
+#include "report.h"
+#include "load.h"
+#include "../modules/giorno_settimana.h"
 
 
 // Mostra il menu principale con le opzioni del sistema di gestione dell'aula studio
@@ -97,7 +98,6 @@ list nuovaPrenotazione(hashtable studenti, list prenotazioni, list settimana) {
     printf("\033[H\033[J");
 
     char matricola[20];
-    char buffer_input[10];
 
     printf("\033[H\033[J");
     while (getchar() != '\n');
@@ -158,8 +158,8 @@ list nuovaPrenotazione(hashtable studenti, list prenotazioni, list settimana) {
     }
                 
     printf("-> Seleziona il giorno desiderato (1-5): ");
-    fgets(buffer_input, sizeof(buffer_input), stdin);
-    int giorno_scelto = atoi(buffer_input); 
+    int giorno_scelto = scanf("%d", &giorno_scelto);
+    getchar();
 
     if (giorno_scelto < 1 || giorno_scelto > 5 || giorno_scelto < d.tm_wday) {
         printf("\n[ERRORE] Scelta non valida o giorno della settimana gia' trascorso.\n");
@@ -177,8 +177,8 @@ list nuovaPrenotazione(hashtable studenti, list prenotazioni, list settimana) {
     printf("  3. 15:00 - 17:00\n");
                 
     printf("-> Seleziona la fascia oraria (0-3): ");
-    fgets(buffer_input, sizeof(buffer_input), stdin);
-    int fascia_scelta = atoi(buffer_input);
+    int fascia_scelta = scanf("%d", &fascia_scelta);
+    getchar();
 
     if (fascia_scelta < 0 || fascia_scelta > 3) {
         printf("\n[ERRORE] Scelta non valida. La fascia deve essere compresa tra 0 e 3.\n");
@@ -508,7 +508,6 @@ queue checkInNonPrenotati(list settimana, queue lista_attesa, list studenti_in_a
 
 // Interfaccia per la gestione del check-in (prenotati e non prenotati)
 queue checkIn(list prenotazioni, list settimana, list studenti_in_aula, queue lista_attesa) {
-    char buffer_input[10];
 
     printf("\033[H\033[J");
     printf("=========================================================\n");
@@ -521,8 +520,8 @@ queue checkIn(list prenotazioni, list settimana, list studenti_in_aula, queue li
     printf("=========================================================\n");
     printf("Seleziona un'opzione: ");
 
-    fgets(buffer_input, sizeof(buffer_input), stdin);
-    int scelta = atoi(buffer_input);
+    int scelta = scanf("%d", &scelta);
+    getchar();
 
     switch(scelta) {
         case 1:
@@ -544,6 +543,7 @@ queue checkIn(list prenotazioni, list settimana, list studenti_in_aula, queue li
 
 // Cerca una matricola all'interno della coda e la cancella dalla lista d'attesa
 queue cancellaDaListaAttesa(queue lista_attesa) {
+    printf("\033[H\033[J"); 
     if (lista_attesa == NULL || emptyqueue(lista_attesa) == 1) {
         printf("\nLa lista d'attesa e' attualmente vuota.\n");
         printf("Premere INVIO per continuare...");
@@ -571,6 +571,7 @@ queue cancellaDaListaAttesa(queue lista_attesa) {
 
 // Stampa a video la posizione e l'elenco di tutte le matricole attualmente in lista d'attesa
 void visualizzaListaAttesa(queue lista_attesa) {
+    printf("\033[H\033[J"); 
     printf("=========================================================\n");
     printf("               STATO ATTUALE LISTA D'ATTESA              \n");
     printf("=========================================================\n");
@@ -906,7 +907,7 @@ void menuStoricoAccessi() {
 
 // Mostra il resoconto globale dell'aula, incluse prenotazioni, accessi effettivi, no-show e distribuzione fasce
 void report(list settimana, list prenotazioni, queue lista_attesa) {
-    // 1. Recupero dei dati dalle tue funzioni
+    
     int prenotazioni_totali = mostraPrenotazioni();
     int accessi_effettivi = mostraAccessiEffettivi();
     int studenti_in_attesa = mostraStudentiInAttesa();
@@ -915,7 +916,7 @@ void report(list settimana, list prenotazioni, queue lista_attesa) {
     int fasce_orarie[4] = {0};
     occupazionePerFasciaOraria(fasce_orarie);
 
-    printf("\033[H\033[J"); // Pulisce lo schermo
+    printf("\033[H\033[J"); 
     printf("=========================================================\n");
     printf("                       REPORT GENERALE                   \n");
     printf("=========================================================\n");
@@ -928,7 +929,7 @@ void report(list settimana, list prenotazioni, queue lista_attesa) {
     printf("  Studenti in Lista d'Attesa:   %d\n", studenti_in_attesa);
     printf("=========================================================\n\n");
 
-    // Tabella della distribuzione per fasce
+
     printf("  PRENOTAZIONI PER FASCIA ORARIA:\n");
     printf("  -----------------------------------------------------\n");
     printf("  Fascia 09:00 - 11:00:         %d studenti\n", fasce_orarie[0]);
@@ -939,4 +940,113 @@ void report(list settimana, list prenotazioni, queue lista_attesa) {
     
     printf("\nPremere INVIO per tornare al menu principale...");
     getchar();
+}
+
+void chiusuraProgramma(list settimana, list studenti_in_aula, queue lista_attesa, list prenotazioni, hashtable studenti) {
+    printf("\033[H\033[J");
+    printf("=========================================================\n");
+    printf("            CHIUSURA DEL SISTEMA IN CORSO...             \n");
+    printf("=========================================================\n");
+    printf("  Salvataggio dati e svuotamento memoria in corso.\n");
+    printf("  Attendere il termine del processo...\n");
+    printf("---------------------------------------------------------\n");
+
+    
+    if (lista_attesa != NULL) {
+        while (!emptyQueue(lista_attesa)) {
+            char *matr = (char *) dequeue(lista_attesa);
+            if (matr != NULL) {
+                free(matr); 
+            }
+        }
+        lista_attesa = NULL;
+    }
+
+    
+    if (studenti_in_aula != NULL) {
+        int tot_presenti = sizeList(studenti_in_aula);
+        for (int i = tot_presenti; i >= 1; i--) {
+            studenti_in_aula = removeList(studenti_in_aula, i);
+        }
+        studenti_in_aula = NULL;
+    }
+    
+
+    
+    if (prenotazioni != NULL) {
+        int tot_prenotazioni = sizeList(prenotazioni);
+        for (int i = tot_prenotazioni; i >= 1; i--) {
+            prenotazione p = (prenotazione) getItem(prenotazioni, i);
+            if (p != NULL) {
+                rimuoviPrenotazione(p); 
+            }
+            prenotazioni = removeList(prenotazioni, i);
+        }
+        prenotazioni = NULL;
+    }
+    
+
+    if (studenti != NULL) {
+        DestroyHashtable(studenti);
+        studenti = NULL;
+    }
+
+
+    printf("[SUCCESSO] Sistema arrestato in modo sicuro.\n");
+    printf("=========================================================\n");
+}
+
+// Dealloca la memoria delle strutture usate dal programma alla sua chiusura
+void chiusuraProgramma(list settimana, list studenti_in_aula, queue lista_attesa, list prenotazioni, hashtable studenti) {
+    printf("\033[H\033[J");
+    printf("=========================================================\n");
+    printf("            CHIUSURA DEL SISTEMA IN CORSO...             \n");
+    printf("=========================================================\n");
+    printf("  Salvataggio dati e svuotamento memoria in corso.\n");
+    printf("  Attendere il termine del processo...\n");
+    printf("---------------------------------------------------------\n");
+
+    
+    if (lista_attesa != NULL) {
+        while (!emptyQueue(lista_attesa)) {
+            char *matr = (char *) dequeue(lista_attesa);
+            if (matr != NULL) {
+                free(matr); 
+            }
+        }
+        lista_attesa = NULL;
+    }
+
+    
+    if (studenti_in_aula != NULL) {
+        int tot_presenti = sizeList(studenti_in_aula);
+        for (int i = tot_presenti; i >= 1; i--) {
+            studenti_in_aula = removeList(studenti_in_aula, i);
+        }
+        studenti_in_aula = NULL;
+    }
+    
+
+    
+    if (prenotazioni != NULL) {
+        int tot_prenotazioni = sizeList(prenotazioni);
+        for (int i = tot_prenotazioni; i >= 1; i--) {
+            prenotazione p = (prenotazione) getItem(prenotazioni, i);
+            if (p != NULL) {
+                rimuoviPrenotazione(p); 
+            }
+            prenotazioni = removeList(prenotazioni, i);
+        }
+        prenotazioni = NULL;
+    }
+    
+
+    if (studenti != NULL) {
+        DestroyHashtable(studenti);
+        studenti = NULL;
+    }
+
+
+    printf("[SUCCESSO] Sistema arrestato in modo sicuro.\n");
+    printf("=========================================================\n");
 }
