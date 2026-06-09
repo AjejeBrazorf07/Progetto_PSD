@@ -43,7 +43,7 @@ int verificaDataSettimana(data d) {
 
     // Sposta la data a lunedì
     data_corrente.tm_mday -= giorni_da_lunedi;
-    mktime(&d);
+    mktime(&data_corrente);
 
     for (int i = 1; i < 6; i++) {
         struct tm g = data_corrente;
@@ -82,7 +82,7 @@ int aggiornaPosto(list settimana, int giorno_sett, int fascia_oraria, int posto,
 // Scorre la lista dei giorni della settimana 
 // Restituisce lo stato del posto corrispondente al giorno e alla fascia oraria della prenotazione, oppure -1 per indicare un errore
 int verificaPosto(list settimana, int giorno_sett, int fascia_oraria, int posto) {
-    giorno_settimana g = getItem(settimana, giorno_sett);
+    giorno_settimana g = (giorno_settimana) getItem(settimana, giorno_sett);
     
     if (g != NULL && fascia_oraria >= 0 && fascia_oraria < NUM_FASCE && posto >= 0 && posto < NUM_POSTI) {
         return g->mappa_posti[fascia_oraria][posto];
@@ -115,15 +115,15 @@ void visualizzaAulaStudio(int giorno_sett, list settimana) {
     };
 
     printf("\n=========================================================\n");
-    printf("          SITUAZIONE POSTI LIBERI - %-14s            \n", nomi_giorni[giorno_sett]);
+    printf("          SITUAZIONE POSTI LIBERI - %-14s                 \n", nomi_giorni[giorno_sett]);
     printf("=========================================================\n");
     printf("  %-17s | %-20s\n", "FASCIA ORARIA", "POSTI DISPONIBILI");
     printf("---------------------------------------------------------\n");
   
-    for(int i = 0; i<4; i++) {
+    for(int i = 0; i<NUM_FASCE; i++) {
         int num_posti = 0;
 
-        for(int j = 0; j < 100; j++) {
+        for(int j = 0; j < NUM_POSTI; j++) {
             if(g->mappa_posti[i][j] == 0) {
                 num_posti++;
             }

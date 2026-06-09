@@ -28,7 +28,7 @@ list caricaPrenotazioni(void);
 
 // Annulla una prenotazione sul file impostando il flag di stato finale a 0.
 // Parametri: lista contenente prenotazioni, stringa matricola, data, orario di ingresso e orario di uscita della prenotazione.
-// Restituisce 1 in caso di successo, 0 se la prenotazione non esiste.
+// Restituisce 1 in caso di successo, 0 se la prenotazione non esiste, -1 in caso di errore
 int cancellaPrenotazione(list prenotazioni, char *matr, data d_pr, orario i, orario u);
 
 // Inizializza il piano orario e le aule per la settimana corrente.

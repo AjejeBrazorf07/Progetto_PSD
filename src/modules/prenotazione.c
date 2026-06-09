@@ -18,7 +18,8 @@ prenotazione creaPrenotazione(char *matricola, data nuova_data, orario ingresso,
         return NULL;
     }
 
-    struct Prenotazione *p = malloc(sizeof(struct Prenotazione));
+    struct Prenotazione *p = malloc(sizeof(*p));
+
     if (p == NULL) {
         return NULL;
     }
@@ -91,15 +92,15 @@ int ottieniPostoAssegnato(prenotazione p) {
 void visualizzaPrenotazione(prenotazione p) {
     if(p==NULL) return;
 
-    printf("Matricola: %s", p->matricola ? p->matricola : "N/D");
+    printf("Matricola: %s\n", p->matricola ? p->matricola : "N/D\n");
     
     visualizzaData(p->data_prenotazione);
     
-    printf("Orario di ingresso: "); 
+    printf("\nOrario di ingresso: "); 
     visualizzaOrario(p->fascia_oraria[0]);
     
-    printf("Orario di uscita: ");
+    printf("\nOrario di uscita: ");
     visualizzaOrario(p->fascia_oraria[1]);
     
-    printf("Posto assegnato:%d", p->posto_assegnato);
+    printf("\nPosto assegnato:%d\n", p->posto_assegnato);
 }

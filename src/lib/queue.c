@@ -4,7 +4,7 @@
 #include "queue.h"
 
 struct node {       
-    item value;
+    queue_item value;
     struct node *next; 
 };
 
@@ -45,7 +45,7 @@ int emptyqueue(queue q) {
  * Parametri: val (elemento da inserire), q (coda di destinazione)
  * Ritorna: 1 se successo, 0 o -1 in caso di errore.
  */
-int enqueue(item val, queue q) {
+int enqueue(queue_item val, queue q) {
     if (q == NULL)
             return -1;
 
@@ -72,11 +72,11 @@ int enqueue(item val, queue q) {
  * Parametri: q (coda da cui estrarre)
  * Ritorna: l'elemento estratto o NULLITEM in caso di coda vuota/non allocata.
  */
-item dequeue(queue q) {
+queue_item dequeue(queue q) {
     if (q == NULL || q->numel == 0) 
         return NULLITEM;
 
-    item result = q->head->value;
+    queue_item result = q->head->value;
     struct node *temp = q->head;
 
     q->head = q->head->next;

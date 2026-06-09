@@ -19,7 +19,8 @@ struct Orario {
 
 // Crea e inizializza una nuova data.
 data nuovaData(int giorno_settimana, int giorno, int mese, int anno) {
-    data d = malloc(sizeof(struct Data));
+    data d = malloc(sizeof(*d));
+    
     if (d == NULL) {
         return NULL; 
     }

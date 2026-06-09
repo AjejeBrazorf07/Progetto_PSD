@@ -5,7 +5,7 @@
 #include "modules/prenotazione.h"
 
 struct node {
-    item value;
+    list_item value;
     struct node *next;
 };
 
@@ -23,7 +23,7 @@ int emptyList(list l) {
 // Inserisce un elemento in testa alla lista.
 // Se l'allocazione fallisce, interrompe il programma per evitare 
 // comportamenti indefiniti a valle.
-list consList(item val, list l) {
+list consList(list_item val, list l) {
     list new_node = (list)malloc(sizeof(struct node));
     if (new_node == NULL) {
         fprintf(stderr, "Errore: impossibile allocare memoria.\n");
@@ -44,7 +44,7 @@ list tailList(list l) {
 }
 
 // Restituisce il valore in testa alla lista senza rimuoverlo.
-item getFirst(list l) {
+list_item getFirst(list l) {
     if (emptyList(l)) {
         fprintf(stderr, "Errore: primo elemento di una lista vuota.\n");
         exit(EXIT_FAILURE);
@@ -67,7 +67,7 @@ int sizeList(list l) {
 // Parametri: l (lista da scorrere), val (valore da cercare)
 // Restituisce posizione (in base 1) o -1 se non trovato.
 // Vale solo per l'item prenotazione
-int posItem(list l, item val) {
+int posItem(list l, list_item val) {
     int pos = 1;
     while (l != NULL) {
             if (comparaPrenotazioni(val, l->value) == 1) {
@@ -81,7 +81,7 @@ int posItem(list l, item val) {
 }
 
 // Recupera il valore alla posizione specificata (in base 1).
-item getItem(list l, int pos) {
+list_item getItem(list l, int pos) {
     int count = 1;
     while (l != NULL) {
         if (count == pos) {

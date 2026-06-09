@@ -29,16 +29,16 @@ int registraStudente(studente s) {
 
     if (f==NULL) return 0;
 
-    int c;
+    int c = 0;
     fscanf(f, "%d", &c);
     c++;
-
+    
     rewind(f);
-    fprintf(f, "%-5d", c);
+    fprintf(f, "%d\n", c);
 
     fseek(f, 0, SEEK_END);
     fprintf(f, "%s;%s;%s\n", ottieniNome(s), ottieniMatricolaST(s), ottieniCorsoLaurea(s));
-
+    
     fclose(f); 
     return 1;
 }
@@ -96,12 +96,14 @@ int registraPrenotazione(prenotazione p) {
 
     if (f==NULL) return 0;
 
-    int c;
-    fscanf(f, "%d", &c);
+    int c = 0;
+    if (fscanf(f, "%d", &c) != 1) {
+        c = 0; 
+    }
     c++;
     
     rewind(f);
-    fprintf(f, "%-5d", c);
+    fprintf(f, "%d\n", c);
 
     fseek(f, 0, SEEK_END);
 
@@ -130,7 +132,7 @@ list caricaPrenotazioni() {
 
     FILE *f = fopen("data/prenotazioni.txt", "r");
 
-    if (f==NULL) return NULL;
+    if (f==NULL) return l;
 
     char buffer[512];
     const char delimitatori[] = ";\n";
@@ -139,13 +141,24 @@ list caricaPrenotazioni() {
     // int prenotazioni_totali = atoi(buffer);
 
     while(fgets(buffer, sizeof(buffer), f) != NULL) {
+        if (strlen(buffer) <= 1) continue;
+
         char *matricola = strtok(buffer, delimitatori);
-        int giorno_settimana = atoi(strtok(NULL, delimitatori));
+        char *giorno_sett = strtok(NULL, delimitatori);
         char *data_str = strtok(NULL, delimitatori);
         char *ingresso_str = strtok(NULL, delimitatori);
         char *uscita_str = strtok(NULL, delimitatori);
-        int posto_assegnato = atoi(strtok(NULL, delimitatori));
-        int stato_prenotazione = atoi(strtok(NULL, delimitatori));
+        char *posto_str = strtok(NULL, delimitatori);
+        char *stato_pr = strtok(NULL, delimitatori);
+
+        if (matricola == NULL || giorno_sett == NULL || data_str == NULL || 
+            ingresso_str == NULL || uscita_str == NULL || posto_str == NULL || stato_pr == NULL) {
+            continue; 
+        }
+
+        int giorno_settimana = atoi(giorno_sett);
+        int posto_assegnato = atoi(posto_str);
+        int stato_prenotazione = atoi(stato_pr);
 
         int giorno, mese, anno;
         sscanf(data_str, "%d/%d/%d", &giorno, &mese, &anno);
@@ -171,6 +184,7 @@ list caricaPrenotazioni() {
                 l = consList(p, l);
             } else {
                 distruggiData(data_prenotazione);
+                // data_prenotazione = NULL;
             }
         } else {
             distruggiData(data_prenotazione);
@@ -184,11 +198,11 @@ list caricaPrenotazioni() {
 
 
 // Annulla una prenotazione sul file impostando il flag di stato finale a 0 (Cancellazione Logica).
-// Ritorna 1 in caso di successo, 0 se la prenotazione non esiste.
+// Ritorna 1 in caso di successo, 0 se la prenotazione non esiste, -1 in caso di errore.
 int cancellaPrenotazione(list prenotazioni, char *matr, data d_pr, orario i, orario u) {
     FILE *f = fopen("data/prenotazioni.txt", "r+");
 
-    if (f==NULL) return NULL;
+    if (f==NULL) return -1;
 
     char buffer[512];
     const char delimitatori[] = ";\n";
@@ -251,7 +265,6 @@ int cancellaPrenotazione(list prenotazioni, char *matr, data d_pr, orario i, ora
 // Genera la struttura del tabellone settimanale (da lunedì a venerdì).
 list inizializzaPianoSettimanale() {
     list l = newList();
-    if (l == NULL) return NULL;
 
     time_t tempo = time(NULL);
     struct tm d = *localtime(&tempo);
@@ -279,9 +292,15 @@ list inizializzaPianoSettimanale() {
 
         if (gs != NULL) {
             l = consList(gs, l);
-        }
+        } else {
+            printf("gs null %d", i);
+        } 
     }
     
+    if(l == NULL) {
+        return NULL;
+    }
+
     return l;
 }
 

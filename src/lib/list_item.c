@@ -7,7 +7,7 @@
 
 
 // Confronta due prenotazioni e stabilisce se sono uguali.
-int comparaPrenotazioni(item p1, item p2) {
+int comparaPrenotazioni(list_item p1, list_item p2) {
     if (p1 == NULL || p2 == NULL) return 0;
 
     if (strcmp(ottieniMatricolaPR(p1), ottieniMatricolaPR(p2)) != 0) return 0;

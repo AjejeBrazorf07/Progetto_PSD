@@ -5,7 +5,7 @@
 
 // Legge nel file prenotazioni.txt e restituisce il numero di prenotazioni totali contenuto in esso
 int mostraPrenotazioni(void) {
-    FILE *f = fopen("../data/prenotazioni.txt", "r");
+    FILE *f = fopen("data/prenotazioni.txt", "r");
 
     if (f == NULL) return 0;
 
@@ -20,9 +20,9 @@ int mostraPrenotazioni(void) {
 
 // Legge nel file accessi_effettivi.txt e restituisce il numero di accessi effettivi totali contenuto in esso
 int mostraAccessiEffettivi(void) {
-    FILE *f = fopen("../data/report/accessi_effettivi.txt", "r");
+    FILE *f = fopen("data/report/accessi_effettivi.txt", "r");
 
-    if (f == NULL) return 0;
+    if (f == NULL) return -1;
 
     char buffer[50];
     fgets(buffer, sizeof(buffer), f);
@@ -37,7 +37,9 @@ int mostraAccessiEffettivi(void) {
 int aggiornaAccessiEffettivi(void) {
     int accessi_effettivi = mostraAccessiEffettivi();
 
-    FILE *f = fopen("../data/report/accessi_effettivi.txt", "w");
+    FILE *f = fopen("data/report/accessi_effettivi.txt", "w");
+
+    if (f==NULL) return -1;
 
     accessi_effettivi++;
     fprintf(f, "%d", accessi_effettivi);
@@ -49,9 +51,9 @@ int aggiornaAccessiEffettivi(void) {
 
 // Legge nel file studenti_in_attesa.txt e restituisce il numero di studenti in attesa contenuto in esso
 int mostraStudentiInAttesa(void) {
-    FILE *f = fopen("../data/report/studenti_in_attesa.txt", "r");
+    FILE *f = fopen("data/report/studenti_in_attesa.txt", "r");
 
-    if (f == NULL) return 0;
+    if (f == NULL) return -1;
 
     char buffer[50];
     fgets(buffer, sizeof(buffer), f);
@@ -66,7 +68,7 @@ int mostraStudentiInAttesa(void) {
 int aggiornaStudentiInAttesa(int operazione) {
     int studenti_in_attesa = mostraStudentiInAttesa(); 
 
-    FILE *f = fopen("../data/report/studenti_in_attesa.txt", "w");
+    FILE *f = fopen("data/report/studenti_in_attesa.txt", "w");
 
     if(operazione == 1) { 
         studenti_in_attesa++;
@@ -83,7 +85,7 @@ int aggiornaStudentiInAttesa(int operazione) {
 
 // Legge nel file studenti_noshow.txt e restituisce il numero totale di assenze registrate
 int mostraStudentiNoshow(void) {
-    FILE *f = fopen("../data/report/studenti_noshow.txt", "r");
+    FILE *f = fopen("data/report/studenti_noshow.txt", "r");
 
     if (f == NULL) return 0;
 
@@ -98,9 +100,9 @@ int mostraStudentiNoshow(void) {
 
 // Aumenta di uno il numero di studenti assenti nel file studenti_noshow.txt 
 int aggiornaStudentiNoshow(void) {
-    int studenti_noshow = mostraStudentiNoshow(); // CORRETTO: rimosso l'errore di battitura "mostraStudentiiNoshow"
+    int studenti_noshow = mostraStudentiNoshow();
 
-    FILE *f = fopen("../data/report/studenti_noshow.txt", "w");
+    FILE *f = fopen("data/report/studenti_noshow.txt", "w");
 
     studenti_noshow++;
     fprintf(f, "%d", studenti_noshow);
@@ -112,7 +114,7 @@ int aggiornaStudentiNoshow(void) {
 
 // Legge nel file storico_accessi.txt e restituisce il contatore degli accessi totali storici
 int mostraStoricoAccessi(void) {
-    FILE *f = fopen("../data/report/storico_accessi.txt", "r");
+    FILE *f = fopen("data/report/storico_accessi.txt", "r");
 
     if (f == NULL) return 0;
 
@@ -129,7 +131,9 @@ int mostraStoricoAccessi(void) {
 int aggiornaStoricoAccessi(void) {
     int storico_accessi = mostraStoricoAccessi();
 
-    FILE *f = fopen("../data/report/storico_accessi.txt", "w");
+    FILE *f = fopen("data/report/storico_accessi.txt", "w");
+
+    if (f==NULL) return -1;
 
     storico_accessi++;
     fprintf(f, "%d", storico_accessi);

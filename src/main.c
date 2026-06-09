@@ -5,7 +5,7 @@
 #include "modules/studente.h"
 #include "modules/prenotazione.h"
 #include "modules/data_ora.h"
-#include "giorno_settimana.h"
+#include "modules/giorno_settimana.h"
 #include "lib/list.h"
 #include "lib/queue.h"
 #include "lib/hash_table.h"
@@ -32,6 +32,8 @@ int main() {
         if (scanf("%d", &scelta) != 1) {
             while (getchar() != '\n');
             scelta = -1; 
+        } else {
+            while (getchar() != '\n'); 
         }
 
         printf("\n");
@@ -56,11 +58,11 @@ int main() {
                 break;
 
             case 5:
-                lista_attesa = checkIn(prenotazioni, settimana, studenti_in_aula, lista_attesa);
+                lista_attesa = checkIn(&prenotazioni, settimana, &studenti_in_aula, lista_attesa);
                 break;
 
             case 6:
-                checkOut(settimana, studenti_in_aula, lista_attesa);
+                checkOut(settimana, &studenti_in_aula, lista_attesa);
                 break;
 
             case 7:
@@ -72,7 +74,7 @@ int main() {
                 break;
 
             case 9:
-                cancellaPrenotazioniScadute(settimana, lista_attesa, studenti_in_aula);
+                cancellaPrenotazioniScadute(settimana, lista_attesa, &studenti_in_aula);
                 break;
 
             case 10:
