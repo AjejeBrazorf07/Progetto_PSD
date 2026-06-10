@@ -58,7 +58,7 @@ hashtable caricaStudenti() {
     // se studenti_totali = 0, size = 10, altrimenti size = studenti_totali/0.75
     int size = (studenti_totali > 0) ? (studenti_totali / 0.75) : 10;
 
-    hashtable h = newHashtable(10);
+    hashtable h = newHashtable(size);
     if (h == NULL) {
         fclose(f);
         return NULL;
@@ -75,7 +75,7 @@ hashtable caricaStudenti() {
         int i = InsertHash(h, matricola, s);
 
         if (i == 0) {
-            perror("Errore nell'inserimento di uno studente nella tabella");
+            printf("Errore nell'inserimento di uno studente nella tabella");
             fclose(f);
             return NULL;
         }
@@ -138,12 +138,17 @@ list caricaPrenotazioni() {
     const char delimitatori[] = ";\n";
     
     fgets(buffer, sizeof(buffer), f);
-    // int prenotazioni_totali = atoi(buffer);
 
     while(fgets(buffer, sizeof(buffer), f) != NULL) {
         if (strlen(buffer) <= 1) continue;
 
-        char *matricola = strtok(buffer, delimitatori);
+        char *matr = strtok(buffer, delimitatori);
+        if (!matr) continue;
+
+        char matricola[20];
+        strncpy(matricola, matr, sizeof(matricola) - 1);
+        matricola[sizeof(matricola) - 1] = '\0';
+
         char *giorno_sett = strtok(NULL, delimitatori);
         char *data_str = strtok(NULL, delimitatori);
         char *ingresso_str = strtok(NULL, delimitatori);
@@ -159,6 +164,8 @@ list caricaPrenotazioni() {
         int giorno_settimana = atoi(giorno_sett);
         int posto_assegnato = atoi(posto_str);
         int stato_prenotazione = atoi(stato_pr);
+
+        if ((stato_prenotazione) != 1) continue;
 
         int giorno, mese, anno;
         sscanf(data_str, "%d/%d/%d", &giorno, &mese, &anno);
@@ -183,8 +190,7 @@ list caricaPrenotazioni() {
             if (p != NULL) {
                 l = consList(p, l);
             } else {
-                distruggiData(data_prenotazione);
-                // data_prenotazione = NULL;
+                
             }
         } else {
             distruggiData(data_prenotazione);

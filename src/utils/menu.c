@@ -442,7 +442,7 @@ void checkInPrenotati(list *prenotazioni, list settimana, list *studenti_in_aula
         
         printf("\nPremere INVIO per continuare...");
         getchar();
-} 
+}
 
 // Assegna un posto immediato a uno studente senza prenotazione, oppure lo inserisce in lista d'attesa se l'aula è piena
 queue checkInNonPrenotati(list settimana, queue lista_attesa, list *studenti_in_aula) {

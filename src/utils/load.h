@@ -1,9 +1,9 @@
-#include "lib/list.h"
-#include "lib/hash_table.h"
-#include "modules/studente.h"
-#include "modules/prenotazione.h"
-#include "modules/data_ora.h"
-#include "modules/giorno_settimana.h"
+#include "../lib/list.h"
+#include "../lib/hash_table.h"
+#include "../modules/studente.h"
+#include "../modules/prenotazione.h"
+#include "../modules/data_ora.h"
+#include "../modules/giorno_settimana.h"
 
 // Salva i dati di un singolo studente in coda al file, usando ';' come delimitatore
 // Parametri: puntatore allo studente da aggiungere

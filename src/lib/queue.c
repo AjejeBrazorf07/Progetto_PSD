@@ -15,7 +15,7 @@ struct c_queue {
 
 /*
  * Inizializza una nuova coda vuota allocando la memoria necessaria.
- * Ritorna: puntatore alla nuova coda, o NULL in caso di errore.
+ * Restituisce: puntatore alla nuova coda, o NULL in caso di errore.
  */
 queue newqueue(void) {
     struct c_queue *q = malloc(sizeof(struct c_queue));
@@ -32,7 +32,7 @@ queue newqueue(void) {
 /*
  * Verifica lo stato della coda.
  * Parametri: q (puntatore alla coda)
- * Ritorna: 1 se vuota, 0 se contiene elementi, -1 se la struttura è NULL.
+ * Restituisce: 1 se vuota, 0 se contiene elementi, -1 se la struttura è NULL.
  */
 int emptyqueue(queue q) {
      if (q == NULL) 
@@ -43,7 +43,7 @@ int emptyqueue(queue q) {
 /*
  * Inserisce un nuovo elemento in fondo alla coda (FIFO).
  * Parametri: val (elemento da inserire), q (coda di destinazione)
- * Ritorna: 1 se successo, 0 o -1 in caso di errore.
+ * Restitusice: 1 se successo, 0 o -1 in caso di errore.
  */
 int enqueue(queue_item val, queue q) {
     if (q == NULL)
@@ -55,7 +55,6 @@ int enqueue(queue_item val, queue q) {
     nuovo->value = val;
     nuovo->next = NULL;
 
-    // Se la coda era vuota, il nuovo nodo è contemporaneamente head e tail
     if (q->head == NULL)
          q->head = nuovo;
     else 
@@ -70,7 +69,7 @@ int enqueue(queue_item val, queue q) {
  * Estrae e restituisce l'elemento in testa alla coda.
  * Rilascia la memoria del nodo estratto per prevenire memory leak.
  * Parametri: q (coda da cui estrarre)
- * Ritorna: l'elemento estratto o NULLITEM in caso di coda vuota/non allocata.
+ * Restituisce: l'elemento estratto o NULLITEM in caso di coda vuota/non allocata.
  */
 queue_item dequeue(queue q) {
     if (q == NULL || q->numel == 0) 
@@ -82,7 +81,6 @@ queue_item dequeue(queue q) {
     q->head = q->head->next;
     free(temp);
 
-    // Se abbiamo rimosso l'ultimo elemento rimasto, resettiamo anche tail
     if (q->head == NULL)
         q->tail = NULL;
 

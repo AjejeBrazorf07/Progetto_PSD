@@ -52,6 +52,6 @@ list reverseList(list l);
 list removeList(list l, int pos);
 
 // Stampa a video tutti gli elementi presenti nella lista in modo sequenziale, separandoli con uno spazio.
-// Prende come parametro un puntatore a una lista.
+// Prende come parametro un puntatore a una lista e un intero che indica di quale item si tratta, 0 per prenotazione, 1 per giorno_settimana
 // Non restituisce alcun valore.
 void outputList(list l, int data_type);

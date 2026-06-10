@@ -1,0 +1,3 @@
+Antonio Sollo;NF12100059;Informatica
+Eva Soldà;NF12100520;Informatica
+Mario Rossi;NF12100389;Informatica
